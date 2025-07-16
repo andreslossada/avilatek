@@ -8,7 +8,6 @@ import { useFlights } from "../hooks/useFlights";
 
 export default function Home() {
     const { flights: allFlights, isLoading, error } = useFlights();
-    // console.log(`🚀 ~ Home ~ allFlights:`, allFlights)
 
     const [filteredFlights, setFilteredFlights] = useState<Flight[]>([]);
     const [searchParams, setSearchParams] = useState<SearchFormData | null>(null);
@@ -22,12 +21,16 @@ export default function Home() {
         setSearchParams(formData);
         if (allFlights.length > 0) {
             const results = allFlights.filter(flight => {
-
                 const destinationMatch = flight.destination.toLowerCase().includes(formData.destination.toLowerCase())
+
                 // for this example we will assume there are infinite dates available
                 // const departureDateMatch = flight.departureDate.toLowerCase().includes(formData.departureDate.toLowerCase())
                 // const returnDateMatch = flight.returnDate.toLowerCase().includes(formData.returnDate.toLowerCase())
-                return destinationMatch;
+
+                //match true when both classes are the same or when the user selects "Any class"
+                const classTypeMatch = formData.classType === "Any Class" || flight.class === formData.classType;
+
+                return destinationMatch && classTypeMatch;
             });
             setFilteredFlights(results);
         }
@@ -108,6 +111,7 @@ export default function Home() {
                 isOpen={isSheetOpen}
                 onOpenChange={setIsSheetOpen}
                 flight={selectedFlight}
+                search={searchParams}
             />
 
         </section>

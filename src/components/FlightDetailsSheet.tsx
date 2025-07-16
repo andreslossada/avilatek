@@ -5,20 +5,30 @@ import { Flight, FlightDetailsSheetProps } from '../types/types'; // Asegúrate 
 // Importa los componentes de Shadcn UI para el Sheet
 import {
     Sheet,
+    SheetClose,
     SheetContent,
     SheetDescription,
+    SheetFooter,
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet"; // Ajusta la ruta si es diferente
 import { FlightConfirmationDialog } from "./FlightConfirmationDialog";
+import { Button } from "./ui/button";
+import { cn, formatDate, stringToDate } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Calendar as CalendarComponent } from "./ui/calendar";
+import { Calendar } from "lucide-react";
+import { useFlightDateStore } from "@/store";
 
 // Define las props que este componente recibirá
 
 
-export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
+export function FlightDetailsSheet({ isOpen, onOpenChange, flight, search }: FlightDetailsSheetProps) {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
 
-    // Esta función se llama cuando se hace clic en "Seleccionar este vuelo" en el Sheet
+
+    const { returnDate, departureDate, setDepartureDate, setReturnDate } = useFlightDateStore();
+
     const handleSelectFlight = () => {
         setIsAlertDialogOpen(true); // Abre el AlertDialog
     };
@@ -29,35 +39,63 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     };
     return (
         <>
-        <Sheet open={isOpen} onOpenChange={onOpenChange}>
-            <SheetContent side="right"> {/* side="right" para que abra desde la derecha */}
-                <SheetHeader>
-                    <SheetTitle>Detalles del Vuelo</SheetTitle>
-                    <SheetDescription>
-                        Información detallada del vuelo seleccionado.
-                    </SheetDescription>
-                </SheetHeader>
-                {flight ? (
-                    <div className="py-4 text-gray-900">
-                        <p className="text-xl font-bold mb-2">{flight.destination}</p>
-                        {/* <p><strong>Salida:</strong> {flight.departureDate}</p>
-                        <p><strong>Regreso:</strong> {flight.returnDate}</p>
-                        <p><strong>Clase:</strong> {flight.class}</p> */}
-                        <p className="text-2xl font-bold mt-4">Precio: ${flight.priceUSD}</p>
-                        {/* Aquí puedes añadir más detalles del vuelo según tu JSON */}
+            <Sheet open={isOpen} onOpenChange={onOpenChange}>
+                <SheetContent side="right" className="p-1">
+                    <SheetHeader>
+                        <SheetTitle>Detalles del Vuelo</SheetTitle>
+                        <SheetDescription>
+                            Información detallada del vuelo seleccionado.
+                        </SheetDescription>
+                    </SheetHeader>
+                    {flight ? (
+                        <div className="p-4 text-gray-900">
+                            <p className="text-xl font-bold mb-2">{flight.destination}</p>
 
-                        <button
-                                onClick={handleSelectFlight}
-                            className="mt-8 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-full"
-                        >
-                            Seleccionar este vuelo
-                        </button>
-                    </div>
-                ) : (
-                    <p className="py-4 text-gray-900">Selecciona un vuelo para ver sus detalles.</p>
-                )}
-            </SheetContent>
-        </Sheet>
+                            {returnDate ? (
+                                <p className="text-2xl font-bold mt-4">Return: {formatDate(returnDate)}</p>
+                            ) : (
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div className={cn(
+                                            "inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all",
+                                            "h-9 px-4 py-2 w-full cursor-pointer",
+                                            "border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
+                                        )}>
+                                            <Calendar className="h-4 w-4" />
+                                            {formatDate(returnDate)}
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <CalendarComponent
+                                            mode="single"
+                                            selected={returnDate}
+                                            onSelect={setReturnDate}
+                                            disabled={(date) => date < new Date()}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            )}
+
+                            {/* {departureDate && (
+                                <p className="text-2xl font-bold mt-4">Departure Date: {departureDate}</p>
+                            )} */}
+                            <p className="text-2xl font-bold mt-4">Precio: ${flight.priceUSD}</p>
+                            <p className="text-2xl font-bold mt-4">Type: {flight.class}</p>
+
+
+                        </div>
+                    ) : (
+                        <p className="p-4 text-gray-900">Selecciona un vuelo para ver sus detalles.</p>
+                    )}
+                    <SheetFooter>
+                        <Button onClick={handleSelectFlight}>Continue</Button>
+                        <SheetClose asChild>
+                            <Button variant="outline">Close</Button>
+                        </SheetClose>
+                    </SheetFooter>
+                </SheetContent>
+            </Sheet>
             <FlightConfirmationDialog
                 isOpen={isAlertDialogOpen}
                 onOpenChange={setIsAlertDialogOpen}

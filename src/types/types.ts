@@ -1,16 +1,19 @@
 export interface Flight {
     destination: string;
-    departureDate: Date; 
-    returnDate: Date; 
+    departureDate?: Date; 
+    returnDate?: Date; 
     priceUSD: number;
+    class: FlightClassOptions;
 }
+
+export type FlightClassOptions = "Economy" | "Business" | "First Class" | "Any Class";
 
 export interface SearchFormData {
     destination: string;
     departureDate?: Date ;
     returnDate?: Date;
     passengers: number;
-    class?: 'economy' | 'business' | 'first'; 
+    classType: FlightClassOptions;
 }
 
 export interface FlightSearchFormProps {
@@ -32,6 +35,7 @@ export interface FlightDetailsSheetProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void; // Función para controlar el estado de apertura/cierre
     flight: Flight | null; // El vuelo seleccionado para mostrar
+    search: SearchFormData | null; // Los parámetros de búsqueda actuales, si es necesario
 }
 
 

@@ -10,19 +10,21 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
-import { FlightSearchFormProps, SearchFormData } from "@/types/types"
+import { FlightClassOptions, FlightSearchFormProps, SearchFormData } from "@/types/types"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { useFlightDateStore } from "@/store"
 
 
 export function FlightSearchForm(
     { onSubmit }: FlightSearchFormProps
 ) {
     const [destination, setDestination] = useState<string>('');
-    const [departureDate, setDepartureDate] = useState<Date>()
-    const [returnDate, setReturnDate] = useState<Date>()
+    // const [departureDate, setDepartureDate] = useState<Date>()
+    // const [returnDate, setReturnDate] = useState<Date>()
     const [passengers, setPassengers] = useState(1)
-    const [classType, setClassType] = useState<'economy' | 'business' | 'first'>('economy'); 
+    const [classType, setClassType] = useState<FlightClassOptions>("Economy")
 
+    const { departureDate, returnDate, setDepartureDate, setReturnDate } = useFlightDateStore();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,9 +34,7 @@ export function FlightSearchForm(
             departureDate,
             returnDate,
             passengers,
-            class: 'economy' // Default class, can be changed later
-
-
+            classType
         };
 
         if (onSubmit) {
@@ -161,7 +161,7 @@ export function FlightSearchForm(
 
                                 </div>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto py-2 px-4" align="start">
+                            <PopoverContent className="w-auto py-4 px-4 grid gap-2" align="start">
                                 <h4 className="leading-none font-semibold text-xs">
                                     Personas y Clase de vuelo
                                 </h4>
@@ -198,15 +198,18 @@ export function FlightSearchForm(
                                         </Button>
                                     </div>
                                 </div>
-                                <Select>
+                                <Select
+                                    onValueChange={(selectedValue: FlightClassOptions) => setClassType(selectedValue)}
+                                >
                                     <SelectTrigger className="w-[180px]">
                                         <SelectValue placeholder={classType.charAt(0).toUpperCase() + classType.slice(1)} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            <SelectItem value="economy"> Economy</SelectItem>
-                                            <SelectItem value="business">Business</SelectItem>
-                                            <SelectItem value="first">First Class</SelectItem>
+                                            <SelectItem value="Economy"> Economy</SelectItem>
+                                            <SelectItem value="Business">Business</SelectItem>
+                                            <SelectItem value="First Class">First Class</SelectItem>
+                                            <SelectItem value="Any Class">Any Class</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -216,7 +219,7 @@ export function FlightSearchForm(
                         </Popover>
                     </div>
 
-                    <Button size="default" className="px-8 ">
+                    <Button size="default" className="px-8 " >
                         <Search className="mr-2 h-4 w-4" />
                         Search Flights
                     </Button>
