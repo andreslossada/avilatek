@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { FlightSearchForm } from "../components/FlightSearch";
 import { Flight, SearchFormData } from "@/types/types";
+import { FlightCard } from "../components/FlightCard";
+import { FlightDetailsSheet } from "@/components/FlightDetailsSheet";
 
 export default function Home() {
     const [allFlights, setAllFlights] = useState<Flight[]>([]);
@@ -10,6 +12,8 @@ export default function Home() {
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showAllActive, setShowAllActive] = useState<boolean>(false);
+    const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
+    const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
     useEffect(() => {
         const fetchFlights = async () => {
@@ -30,7 +34,6 @@ export default function Home() {
         };
         fetchFlights();
     }, []);
-    // console.log("All flights fetched:", allFlights);
 
     const handleSearchSubmit = (formData: SearchFormData) => {
         setSearchParams(formData);
@@ -52,6 +55,12 @@ export default function Home() {
         setShowAllActive(true); // Activa el estado para indicar que se están mostrando todos
         setSearchParams(null); // Opcional: Limpia los parámetros de búsqueda si se muestran todos
     };
+
+    const handleFlightSelect = (flight: Flight) => {
+        setSelectedFlight(flight);
+        setIsSheetOpen(true);
+    };
+
 
     // Determina qué lista de vuelos mostrar
     const flightsToDisplay = showAllActive ? allFlights : filteredFlights;
@@ -99,12 +108,11 @@ export default function Home() {
                     {!isLoading && !error && filteredFlights.length > 0 && (
                         <ul className="space-y-4">
                             {flightsToDisplay.map((flight, index) => (
-                                <li key={`${flight.destination}-${index}`} className="border-b pb-2 last:border-b-0">
-                                    <p className="font-semibold"> {flight.destination}</p>
-                                    {/* <p>Salida: {flight.departureDate}</p>
-                                    <p>Regreso: {flight.returnDate}</p> */}
-                                    <p>Precio: ${flight.priceUSD}</p>
-                                </li>
+                                <FlightCard
+                                    key={`${index}-${flight.destination}-${flight.departureDate}-${flight.priceUSD}`}
+                                    flight={flight}
+                                    onSelect={handleFlightSelect}
+                                />
                             ))}
                         </ul>
                     )}
@@ -113,6 +121,11 @@ export default function Home() {
 
 
             </div>
+            <FlightDetailsSheet
+                isOpen={isSheetOpen}
+                onOpenChange={setIsSheetOpen}
+                flight={selectedFlight}
+            />
 
         </section>
     );

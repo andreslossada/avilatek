@@ -14,3 +14,8 @@ export interface SearchFormData {
 export interface FlightSearchFormProps {
     onSubmit: (formData: SearchFormData) => void;
 }
+export interface FlightCardProps {
+    flight: Flight;
+    onSelect: (flight: Flight) => void; // Función para notificar al padre qué vuelo fue seleccionado
+    key: string
+}
