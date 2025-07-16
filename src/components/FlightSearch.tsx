@@ -10,11 +10,32 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
+import { FlightSearchFormProps, SearchFormData } from "@/types/types"
 
-export function FlightSearchForm() {
+
+export function FlightSearchForm(
+    { onSubmit }: FlightSearchFormProps
+) {
+    const [destination, setDestination] = useState<string>(''); 
     const [departureDate, setDepartureDate] = useState<Date>()
     const [returnDate, setReturnDate] = useState<Date>()
     const [passengers, setPassengers] = useState(1)
+
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const formData: SearchFormData = {
+            destination,
+            // departureDate,
+            // returnDate,
+        };
+
+        if (onSubmit) {
+            onSubmit(formData);
+        }
+        // console.log('Datos del formulario a enviar:', formData);
+    };
 
     const formatDate = (date: Date | undefined) => {
         if (!date) return 'Select date'
@@ -50,18 +71,7 @@ export function FlightSearchForm() {
         <Card className="w-full max-w-4xl mx-auto shadow-lg">
             <CardContent className="p-6">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div className="space-y-2">
-                        <Label htmlFor="from">From</Label>
-                        <div className="relative">
-                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                id="from"
-                                placeholder="Departure city"
-                                className="pl-10"
-                            />
-                        </div>
-                    </div>
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 
                     <div className="space-y-2">
                         <Label htmlFor="to">To</Label>
@@ -71,6 +81,8 @@ export function FlightSearchForm() {
                                 id="to"
                                 placeholder="Destination city"
                                 className="pl-10"
+                                onChange={(e) => setDestination(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
@@ -129,7 +141,6 @@ export function FlightSearchForm() {
 
                     </div>
 
-                </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-between  items-center">
                     <div className="space-y-2 ">
@@ -177,6 +188,8 @@ export function FlightSearchForm() {
                         Search Flights
                     </Button>
                 </div>
+                </form >
+
             </CardContent>
         </Card>
     )
