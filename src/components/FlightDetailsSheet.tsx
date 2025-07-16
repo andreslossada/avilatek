@@ -1,6 +1,6 @@
 // components/FlightDetailsSheet.tsx
-import React from 'react';
-import { Flight } from '../types/types'; // Asegúrate de que la ruta sea correcta
+import React, { useState } from 'react';
+import { Flight, FlightDetailsSheetProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
 
 // Importa los componentes de Shadcn UI para el Sheet
 import {
@@ -10,16 +10,25 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet"; // Ajusta la ruta si es diferente
+import { FlightConfirmationDialog } from "./FlightConfirmationDialog";
 
 // Define las props que este componente recibirá
-interface FlightDetailsSheetProps {
-    isOpen: boolean;
-    onOpenChange: (open: boolean) => void; // Función para controlar el estado de apertura/cierre
-    flight: Flight | null; // El vuelo seleccionado para mostrar
-}
+
 
 export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
+    const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
+
+    // Esta función se llama cuando se hace clic en "Seleccionar este vuelo" en el Sheet
+    const handleSelectFlight = () => {
+        setIsAlertDialogOpen(true); // Abre el AlertDialog
+    };
+    const handleConfirmBooking = () => {
+        alert(`¡Reserva para el vuelo a ${flight?.destination} confirmada!`);
+        setIsAlertDialogOpen(false);
+        onOpenChange(false);
+    };
     return (
+        <>
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
             <SheetContent side="right"> {/* side="right" para que abra desde la derecha */}
                 <SheetHeader>
@@ -38,10 +47,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                         {/* Aquí puedes añadir más detalles del vuelo según tu JSON */}
 
                         <button
-                            onClick={() => {
-                                alert(`¡Vuelo a ${flight.destination} seleccionado! (Simulado)`);
-                                onOpenChange(false); // Cierra el drawer después de la acción
-                            }}
+                                onClick={handleSelectFlight}
                             className="mt-8 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-full"
                         >
                             Seleccionar este vuelo
@@ -52,5 +58,12 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                 )}
             </SheetContent>
         </Sheet>
+            <FlightConfirmationDialog
+                isOpen={isAlertDialogOpen}
+                onOpenChange={setIsAlertDialogOpen}
+                flight={flight}
+                onConfirm={handleConfirmBooking}
+            />
+        </>
     );
 }

@@ -7,8 +7,10 @@ export interface Flight {
 
 export interface SearchFormData {
     destination: string;
-    // departureDate: Date | undefined;
-    // returnDate: Date    | undefined;
+    departureDate?: Date ;
+    returnDate?: Date;
+    passengers: number;
+    class?: 'economy' | 'business' | 'first'; 
 }
 
 export interface FlightSearchFormProps {
@@ -17,5 +19,25 @@ export interface FlightSearchFormProps {
 export interface FlightCardProps {
     flight: Flight;
     onSelect: (flight: Flight) => void; // Función para notificar al padre qué vuelo fue seleccionado
-    key: string
+}
+
+export  interface FlightConfirmationDialogProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void; // Función para controlar el estado de apertura/cierre
+    flight: Flight | null; // El vuelo seleccionado para mostrar el resumen
+    onConfirm: () => void; // Función para ejecutar cuando se confirma la reserva
+}
+
+export interface FlightDetailsSheetProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void; // Función para controlar el estado de apertura/cierre
+    flight: Flight | null; // El vuelo seleccionado para mostrar
+}
+
+
+export interface UseFlightsResult {
+    allFlights: Flight[];
+     isLoading: boolean;
+  error: string | null;
+//   refetch: () => void;
 }

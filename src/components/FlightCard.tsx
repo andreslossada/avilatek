@@ -5,10 +5,9 @@ import { Flight, FlightCardProps } from '../types/types'; // Asegúrate de que l
 // Define las props que FlightCard recibirá
 
 
-export function FlightCard({ flight, onSelect, key }: FlightCardProps) {
+export function FlightCard({ flight, onSelect }: FlightCardProps) {
     return (
         <li
-            key={key}
             className="border-b pb-2 last:border-b-0 cursor-pointer p-4 hover:bg-gray-50 transition-colors duration-200 rounded-md"
             onClick={() => onSelect(flight)} // Cuando se haga clic, llama a onSelect con el vuelo
         >

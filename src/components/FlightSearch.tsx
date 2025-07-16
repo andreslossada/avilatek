@@ -11,15 +11,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import { FlightSearchFormProps, SearchFormData } from "@/types/types"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 
 export function FlightSearchForm(
     { onSubmit }: FlightSearchFormProps
 ) {
-    const [destination, setDestination] = useState<string>(''); 
+    const [destination, setDestination] = useState<string>('');
     const [departureDate, setDepartureDate] = useState<Date>()
     const [returnDate, setReturnDate] = useState<Date>()
     const [passengers, setPassengers] = useState(1)
+    const [classType, setClassType] = useState<'economy' | 'business' | 'first'>('economy'); 
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -27,14 +29,17 @@ export function FlightSearchForm(
 
         const formData: SearchFormData = {
             destination,
-            // departureDate,
-            // returnDate,
+            departureDate,
+            returnDate,
+            passengers,
+            class: 'economy' // Default class, can be changed later
+
+
         };
 
         if (onSubmit) {
             onSubmit(formData);
         }
-        // console.log('Datos del formulario a enviar:', formData);
     };
 
     const formatDate = (date: Date | undefined) => {
@@ -68,10 +73,10 @@ export function FlightSearchForm(
     }
 
     return (
-        <Card className="w-full max-w-4xl mx-auto shadow-lg">
-            <CardContent className="p-6">
+        <Card className="w-full max-w-4xl mx-auto shadow-lg ">
+            <CardContent className="px-6 py-4">
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4  items-end justify-end">
 
                     <div className="space-y-2">
                         <Label htmlFor="to">To</Label>
@@ -89,8 +94,8 @@ export function FlightSearchForm(
 
                     <div className="space-y-2">
                         <Label>Departure</Label>
-                        <Popover>
-                            <PopoverTrigger>
+                        <Popover >
+                            <PopoverTrigger asChild>
                                 <div className={cn(
                                     "inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all",
                                     "h-9 px-4 py-2 w-full cursor-pointer",
@@ -115,10 +120,8 @@ export function FlightSearchForm(
 
                     <div className="space-y-2 ">
                         <Label>Return</Label>
-
                         <Popover>
-
-                            <PopoverTrigger>
+                            <PopoverTrigger asChild>
                                 <div className={cn(
                                     "w-full flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all ",
                                     "h-9 px-4 py-2 w-full cursor-pointer ",
@@ -142,52 +145,82 @@ export function FlightSearchForm(
                     </div>
 
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-between  items-center">
+
                     <div className="space-y-2 ">
                         <Label>Passengers</Label>
-                        <div className="flex border rounded-md box-content items-center">
-                            <div >
-                                <Users className="ml-3 h-4 w-4  " />
-                            </div>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-9 w-9 shrink-0"
-                                onClick={decrementPassengers}
-                                disabled={passengers <= 1}
-                            >
-                                <Minus className="h-4 w-4" />
-                            </Button>
-                            <Input
-                                type="number"
-                                value={passengers}
-                                onChange={handlePassengerInputChange}
-                                min="1"
-                                max="10"
-                                className="border-0 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-9 w-9 shrink-0"
-                                onClick={incrementPassengers}
-                                disabled={passengers >= 10}
-                            >
-                                <Plus className="h-4 w-4" />
-                            </Button>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                            {passengers} {passengers === 1 ? 'Passenger' : 'Passengers'}
-                        </p>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <div className={cn(
+                                    "inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all",
+                                    "h-9  py-2 w-full px-4 cursor-pointer",
+                                    "border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
+                                )}>
+                                    <Users className="h-4 w-4" />
+                                    {passengers} , {classType.charAt(0).toUpperCase() + classType.slice(1)}
+
+
+                                </div>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto py-2 px-4" align="start">
+                                <h4 className="leading-none font-semibold text-xs">
+                                    Personas y Clase de vuelo
+                                </h4>
+                                <div className="flex items-center justify-between mt-2 gap-3">
+                                    <Label>Adultos</Label>
+                                    <div className="flex gap-1">
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-9 w-9 shrink-0"
+                                            onClick={decrementPassengers}
+                                            disabled={passengers <= 1}
+                                        >
+                                            <Minus className="h-4 w-4" />
+                                        </Button>
+                                        <Input
+                                            type="number"
+                                            value={passengers}
+                                            onChange={handlePassengerInputChange}
+                                            min="1"
+                                            max="10"
+                                            className="border-0 text-center px-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-9 w-9 shrink-0"
+                                            onClick={incrementPassengers}
+                                            disabled={passengers >= 10}
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                                <Select>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder={classType.charAt(0).toUpperCase() + classType.slice(1)} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="economy"> Economy</SelectItem>
+                                            <SelectItem value="business">Business</SelectItem>
+                                            <SelectItem value="first">First Class</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+
+
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
-                    <Button size="lg" className="px-8">
+                    <Button size="default" className="px-8 ">
                         <Search className="mr-2 h-4 w-4" />
                         Search Flights
                     </Button>
-                </div>
+
                 </form >
 
             </CardContent>

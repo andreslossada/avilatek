@@ -1,39 +1,22 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FlightSearchForm } from "../components/FlightSearch";
 import { Flight, SearchFormData } from "@/types/types";
 import { FlightCard } from "../components/FlightCard";
 import { FlightDetailsSheet } from "@/components/FlightDetailsSheet";
+import { useFlights } from "../hooks/useFlights";
 
 export default function Home() {
-    const [allFlights, setAllFlights] = useState<Flight[]>([]);
+    const { flights: allFlights, isLoading, error } = useFlights();
+    // console.log(`🚀 ~ Home ~ allFlights:`, allFlights)
+
     const [filteredFlights, setFilteredFlights] = useState<Flight[]>([]);
     const [searchParams, setSearchParams] = useState<SearchFormData | null>(null);
-    const [isLoading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [showAllActive, setShowAllActive] = useState<boolean>(false);
+
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
-    useEffect(() => {
-        const fetchFlights = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await fetch("https://raw.githubusercontent.com/Lstanislao/cities-permalink/main/flights.json");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch flights");
-                }
-                const data = await response.json();
-                setAllFlights(data as Flight[]);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "An unexpected error occurred");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchFlights();
-    }, []);
 
     const handleSearchSubmit = (formData: SearchFormData) => {
         setSearchParams(formData);
