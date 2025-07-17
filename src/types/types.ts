@@ -12,8 +12,8 @@ export interface SearchFormData {
     destination: string;
     departureDate?: Date ;
     returnDate?: Date;
-    passengers: number;
-    classType: FlightClassOptions;
+    numberOfTravelers: number;
+    flightClass: FlightClassOptions;
 }
 
 export interface FlightSearchFormProps {
@@ -45,3 +45,29 @@ export interface UseFlightsResult {
   error: string | null;
 //   refetch: () => void;
 }
+
+export interface SearchFormState {
+  // -- Información del Viaje --
+  destination: string;
+  departureDate?: Date; // Puede ser undefined si no se ha seleccionado
+  returnDate?: Date;    // Puede ser undefined si no se ha seleccionado
+  flightClass: FlightClassOptions; // Clase de vuelo
+  numberOfTravelers: number; // Cantidad de viajeros (sin sus detalles individuales)
+
+  // -----------------------------------------------------
+  // 2. Acciones para modificar el estado
+  // -----------------------------------------------------
+  setDestination: (destination: string) => void;
+  setDepartureDate: (date?: Date) => void;
+  setReturnDate: (date?: Date) => void;
+  setFlightClass: (flightClass: FlightClassOptions) => void;
+  setNumberOfTravelers: (count: number) => void;
+}
+
+export interface DateInputProps {
+    selectedDate?: Date; // La fecha seleccionada actualmente (puede ser undefined)
+    onDateSelect: (date?: Date) => void; // Función que se llama cuando se selecciona una fecha
+    placeholderText: string; // Texto a mostrar cuando no hay fecha seleccionada
+    disabledPredicate?: (date: Date) => boolean; // Función opcional para deshabilitar fechas
+    // Puedes añadir más props si necesitas personalizar otros aspectos (ej. className)
+  }

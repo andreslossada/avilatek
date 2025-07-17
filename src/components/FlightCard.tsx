@@ -13,7 +13,7 @@ export function FlightCard({ flight, onSelect }: FlightCardProps) {
         >
             <div className="flex justify-between items-center">
                 <p className="font-semibold text-lg text-gray-900">{flight.destination}</p>
-                <p className="text-xl font-bold text-blue-600">${flight.priceUSD}</p>
+                <p className="text-xl font-bold text-green-900">${flight.priceUSD} <span className="text-primary text-sm">each</span></p>
             </div>
             {/* <p className="text-sm text-gray-700">Salida: {flight.departureDate}</p>
             <p className="text-sm text-gray-700">Regreso: {flight.returnDate}</p> */}

@@ -1,8 +1,6 @@
-// components/FlightDetailsSheet.tsx
 import React, { useState } from 'react';
-import { Flight, FlightDetailsSheetProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
+import { FlightDetailsSheetProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
 
-// Importa los componentes de Shadcn UI para el Sheet
 import {
     Sheet,
     SheetClose,
@@ -14,86 +12,143 @@ import {
 } from "@/components/ui/sheet"; // Ajusta la ruta si es diferente
 import { FlightConfirmationDialog } from "./FlightConfirmationDialog";
 import { Button } from "./ui/button";
-import { cn, formatDate, stringToDate } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar as CalendarComponent } from "./ui/calendar";
-import { Calendar } from "lucide-react";
-import { useFlightDateStore } from "@/store";
+import { Label } from "./ui/label";
+import { useSearchFormStore } from "@/store/searchFormStore";
+import { ClassInput } from "./ClassInput";
+import { DateInput } from "./DateInput";
+import { PassengersInput } from "./PassengersInput";
+import { ScrollArea } from "./ui/scroll-area";
+import { CornerUpLeft, CornerUpRight, Plane } from "lucide-react";
 
 // Define las props que este componente recibirá
 
 
-export function FlightDetailsSheet({ isOpen, onOpenChange, flight, search }: FlightDetailsSheetProps) {
+export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
+    const {
+        departureDate,
+        setDepartureDate,
+        returnDate,
+        setReturnDate,
+        numberOfTravelers, // Necesario para iterar los viajeros
+        travelerDetails
+    } = useSearchFormStore();
+    const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
+    const disableDepartureDates = (date: Date) => {
+        // 1. Deshabilitar fechas pasadas
+        if (disablePastDates(date)) {
+            return true;
+        }
+        // 2. Si returnDate está seleccionada, deshabilitar cualquier fecha de salida posterior a returnDate
+        if (returnDate && date > returnDate) { // ✨ date > returnDate
+            return true;
+        }
+        return false;
+    };
+    const disableReturnDates = (date: Date) => {
+        // 1. Deshabilitar fechas pasadas
+        if (disablePastDates(date)) {
+            return true;
+        }
+        // 2. Si departureDate está seleccionada, deshabilitar cualquier fecha de regreso anterior a departureDate
+        if (departureDate && date < departureDate) { // ✨ date < departureDate
+            return true;
+        }
+        return false;
+    };
 
-
-    const { returnDate, departureDate, setDepartureDate, setReturnDate } = useFlightDateStore();
 
     const handleSelectFlight = () => {
-        setIsAlertDialogOpen(true); // Abre el AlertDialog
+        setIsAlertDialogOpen(true); 
     };
     const handleConfirmBooking = () => {
         alert(`¡Reserva para el vuelo a ${flight?.destination} confirmada!`);
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
+    const totalPrice = flight ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers : 0;
+
+    const areAllEssentialFieldsFilled = () => {
+        // 1. Validar fechas de salida y regreso
+        if (!departureDate || !returnDate) {
+            return false;
+        }
+
+        // 2. Validar los detalles de cada viajero
+        // Asegúrate de que el array travelerDetails tenga la misma cantidad de elementos que numberOfTravelers
+        if (travelerDetails.length !== numberOfTravelers) {
+            return false;
+        }
+
+        for (let i = 0; i < numberOfTravelers; i++) {
+            const traveler = travelerDetails[i];
+            // Si el objeto del viajero no existe o alguno de sus campos esenciales está vacío/undefined
+            if (
+                !traveler ||
+                !traveler.fullName ||
+                !traveler.documentType ||
+                !traveler.documentNumber ||
+                !traveler.dateOfBirth
+            ) {
+                return false; // Falta información para este viajero
+            }
+        }
+
+        // Si todas las comprobaciones pasaron
+        return true;
+    };
     return (
         <>
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="right" className="p-1">
-                    <SheetHeader>
-                        <SheetTitle>Detalles del Vuelo</SheetTitle>
-                        <SheetDescription>
-                            Información detallada del vuelo seleccionado.
-                        </SheetDescription>
+                <SheetContent side="right" className="px-4 bg-gray-100 ">
+
+                    <SheetHeader className="px-0 pb-0">
+                        <SheetTitle>Flight Details</SheetTitle>
                     </SheetHeader>
+
+                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm">
                     {flight ? (
-                        <div className="p-4 text-gray-900">
-                            <p className="text-xl font-bold mb-2">{flight.destination}</p>
+                            <div className="p-4 text-gray-900">
+                                <div className="flex items-center gap-3 mb-1">
+                                    <Plane />
+                                    <h4 className="text-xl font-bold mb-2"> {flight.destination}</h4>
+                                </div>
+                                <div className="flex gap-2">
 
-                            {returnDate ? (
-                                <p className="text-2xl font-bold mt-4">Return: {formatDate(returnDate)}</p>
-                            ) : (
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <div className={cn(
-                                            "inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all",
-                                            "h-9 px-4 py-2 w-full cursor-pointer",
-                                            "border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
-                                        )}>
-                                            <Calendar className="h-4 w-4" />
-                                            {formatDate(returnDate)}
-                                        </div>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <CalendarComponent
-                                            mode="single"
-                                            selected={returnDate}
-                                            onSelect={setReturnDate}
-                                            disabled={(date) => date < new Date()}
-                                            initialFocus
+                                    <div className="flex w-full space-x-1 items-center">
+                                        <CornerUpRight />
+                                        <DateInput selectedDate={departureDate}
+                                            onDateSelect={setDepartureDate}
+                                            placeholderText="Departure"
+                                            disabledPredicate={disableDepartureDates}
                                         />
-                                    </PopoverContent>
-                                </Popover>
-                            )}
+                                    </div>
 
-                            {/* {departureDate && (
-                                <p className="text-2xl font-bold mt-4">Departure Date: {departureDate}</p>
-                            )} */}
-                            <p className="text-2xl font-bold mt-4">Precio: ${flight.priceUSD}</p>
-                            <p className="text-2xl font-bold mt-4">Type: {flight.class}</p>
-
-
+                                    <div className="flex w-full space-x-1 items-center">
+                                        <CornerUpLeft />
+                                        <DateInput selectedDate={returnDate} // Pasa el estado de regreso
+                                            onDateSelect={setReturnDate} // Pasa la acción para actualizar el regreso
+                                            placeholderText="Return"
+                                            disabledPredicate={disableReturnDates} // Pasa la función para deshabilitar fechas de regreso
+                                        />
+                                    </div>
+                                </div>
+                                <ClassInput sheet />
+                                <PassengersInput />
                         </div>
                     ) : (
                         <p className="p-4 text-gray-900">Selecciona un vuelo para ver sus detalles.</p>
                     )}
-                    <SheetFooter>
-                        <Button onClick={handleSelectFlight}>Continue</Button>
+                    </ScrollArea>
+
+                    <SheetFooter className="px-0 pt-0">
+                        <p className="text-2xl font-bold my-1 text-green-900 ml-auto">Total: ${totalPrice}</p>
+                        <Button onClick={handleSelectFlight} disabled={!areAllEssentialFieldsFilled()}>Continue</Button>
                         <SheetClose asChild>
-                            <Button variant="outline">Close</Button>
+                            <Button variant="outline" >Close</Button>
                         </SheetClose>
                     </SheetFooter>
+
                 </SheetContent>
             </Sheet>
             <FlightConfirmationDialog

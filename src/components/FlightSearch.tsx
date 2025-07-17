@@ -1,30 +1,38 @@
 'use client'
 
-import { useState } from 'react'
 import { Calendar, MapPin, Users, Search, Plus, Minus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
-import { FlightClassOptions, FlightSearchFormProps, SearchFormData } from "@/types/types"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { useFlightDateStore } from "@/store"
+import { FlightSearchFormProps, SearchFormData } from "@/types/types"
+import { useSearchFormStore } from "@/store/searchFormStore"
+import { ClassInput } from "./ClassInput"
+import { DateInput } from "./DateInput"
+import { PassengerCounter } from "./PassengerCounter"
 
 
 export function FlightSearchForm(
     { onSubmit }: FlightSearchFormProps
 ) {
-    const [destination, setDestination] = useState<string>('');
-    // const [departureDate, setDepartureDate] = useState<Date>()
-    // const [returnDate, setReturnDate] = useState<Date>()
-    const [passengers, setPassengers] = useState(1)
-    const [classType, setClassType] = useState<FlightClassOptions>("Economy")
+    // const [destination, setDestination] = useState<string>('');
+    // const [passengers, setPassengers] = useState(1)
+    // const [classType, setClassType] = useState<FlightClassOptions>("Economy")
 
-    const { departureDate, returnDate, setDepartureDate, setReturnDate } = useFlightDateStore();
+    const {
+        destination,
+        setDestination,
+        departureDate,
+        setDepartureDate,
+        returnDate,
+        setReturnDate,
+        flightClass,
+        numberOfTravelers,
+        setNumberOfTravelers,
+    } = useSearchFormStore();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,8 +41,8 @@ export function FlightSearchForm(
             destination,
             departureDate,
             returnDate,
-            passengers,
-            classType
+            numberOfTravelers,
+            flightClass,
         };
 
         if (onSubmit) {
@@ -52,25 +60,47 @@ export function FlightSearchForm(
     }
 
     const incrementPassengers = () => {
-        if (passengers < 10) {
-            setPassengers(passengers + 1)
+        if (numberOfTravelers < 10) {
+            setNumberOfTravelers(numberOfTravelers + 1)
         }
     }
 
     const decrementPassengers = () => {
-        if (passengers > 1) {
-            setPassengers(passengers - 1)
+        if (numberOfTravelers > 1) {
+            setNumberOfTravelers(numberOfTravelers - 1)
         }
     }
-
+    const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
     const handlePassengerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value)
         if (!isNaN(value) && value >= 1 && value <= 10) {
-            setPassengers(value)
+            setNumberOfTravelers(value)
         } else if (e.target.value === '') {
-            setPassengers(1)
+            setNumberOfTravelers(1)
         }
     }
+    const disableDepartureDates = (date: Date) => {
+        // 1. Deshabilitar fechas pasadas
+        if (disablePastDates(date)) {
+            return true;
+        }
+        // 2. Si returnDate está seleccionada, deshabilitar cualquier fecha de salida posterior a returnDate
+        if (returnDate && date > returnDate) { // ✨ date > returnDate
+            return true;
+        }
+        return false;
+    };
+    const disableReturnDates = (date: Date) => {
+        // 1. Deshabilitar fechas pasadas
+        if (disablePastDates(date)) {
+            return true;
+        }
+        // 2. Si departureDate está seleccionada, deshabilitar cualquier fecha de regreso anterior a departureDate
+        if (departureDate && date < departureDate) { // ✨ date < departureDate
+            return true;
+        }
+        return false;
+    };
 
     return (
         <Card className="w-full max-w-4xl mx-auto shadow-lg ">
@@ -94,53 +124,21 @@ export function FlightSearchForm(
 
                     <div className="space-y-2">
                         <Label>Departure</Label>
-                        <Popover >
-                            <PopoverTrigger asChild>
-                                <div className={cn(
-                                    "inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all",
-                                    "h-9 px-4 py-2 w-full cursor-pointer",
-                                    "border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
-                                )}>
-                                    <Calendar className="h-4 w-4" />
-                                    {formatDate(departureDate)}
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <CalendarComponent
-                                    mode="single"
-                                    selected={departureDate}
-                                    onSelect={setDepartureDate}
-                                    disabled={(date) => date < new Date()}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <DateInput selectedDate={departureDate}
+                            onDateSelect={setDepartureDate}
+                            placeholderText="Selecciona fecha de ida"
+                            disabledPredicate={disableDepartureDates}
+                        />
                     </div>
 
 
                     <div className="space-y-2 ">
                         <Label>Return</Label>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <div className={cn(
-                                    "w-full flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all ",
-                                    "h-9 px-4 py-2 w-full cursor-pointer ",
-                                    "border bg-background text-foreground hover:bg-accent hover:text-accent-foreground "
-                                )}>
-                                    <Calendar className="h-4 w-4 " />
-                                    {formatDate(returnDate)}
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <CalendarComponent
-                                    mode="single"
-                                    selected={returnDate}
-                                    onSelect={setReturnDate}
-                                    disabled={(date) => date < (departureDate || new Date())}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <DateInput selectedDate={returnDate}
+                            onDateSelect={setReturnDate}
+                            placeholderText="Selecciona fecha de ida"
+                            disabledPredicate={disableReturnDates}
+                        />
 
                     </div>
 
@@ -156,7 +154,7 @@ export function FlightSearchForm(
                                     "border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
                                 )}>
                                     <Users className="h-4 w-4" />
-                                    {passengers} , {classType.charAt(0).toUpperCase() + classType.slice(1)}
+                                    {numberOfTravelers} , {flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
 
 
                                 </div>
@@ -167,52 +165,9 @@ export function FlightSearchForm(
                                 </h4>
                                 <div className="flex items-center justify-between mt-2 gap-3">
                                     <Label>Adultos</Label>
-                                    <div className="flex gap-1">
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-9 w-9 shrink-0"
-                                            onClick={decrementPassengers}
-                                            disabled={passengers <= 1}
-                                        >
-                                            <Minus className="h-4 w-4" />
-                                        </Button>
-                                        <Input
-                                            type="number"
-                                            value={passengers}
-                                            onChange={handlePassengerInputChange}
-                                            min="1"
-                                            max="10"
-                                            className="border-0 text-center px-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-9 w-9 shrink-0"
-                                            onClick={incrementPassengers}
-                                            disabled={passengers >= 10}
-                                        >
-                                            <Plus className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    <PassengerCounter />
                                 </div>
-                                <Select
-                                    onValueChange={(selectedValue: FlightClassOptions) => setClassType(selectedValue)}
-                                >
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder={classType.charAt(0).toUpperCase() + classType.slice(1)} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="Economy"> Economy</SelectItem>
-                                            <SelectItem value="Business">Business</SelectItem>
-                                            <SelectItem value="First Class">First Class</SelectItem>
-                                            <SelectItem value="Any Class">Any Class</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                                <ClassInput />
 
 
                             </PopoverContent>

@@ -28,7 +28,7 @@ export default function Home() {
                 // const returnDateMatch = flight.returnDate.toLowerCase().includes(formData.returnDate.toLowerCase())
 
                 //match true when both classes are the same or when the user selects "Any class"
-                const classTypeMatch = formData.classType === "Any Class" || flight.class === formData.classType;
+                const classTypeMatch = formData.flightClass === "Any Class" || flight.class === formData.flightClass;
 
                 return destinationMatch && classTypeMatch;
             });
