@@ -5,23 +5,18 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
-    SheetDescription,
     SheetFooter,
     SheetHeader,
     SheetTitle,
 } from '@/components/ui/sheet'; // Ajusta la ruta si es diferente
 import { FlightConfirmationDialog } from './FlightConfirmationDialog';
 import { Button } from './ui/button';
-import { Label } from './ui/label';
 import { useSearchFormStore } from '@/store/searchFormStore';
-import { ClassInput } from './ClassInput';
 import { DateInput } from './DateInput';
 import { PassengersInput } from './PassengersInput';
 import { ScrollArea } from './ui/scroll-area';
 import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
-
-// Define las props que este componente recibirá
 
 export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
@@ -39,25 +34,23 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     } = useSearchFormStore();
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
     const disableDepartureDates = (date: Date) => {
-        // 1. Deshabilitar fechas pasadas
+        //Disable past dates
         if (disablePastDates(date)) {
             return true;
         }
-        // 2. Si returnDate está seleccionada, deshabilitar cualquier fecha de salida posterior a returnDate
+        //If returnDate is selected, disable any departure date after returnDate
         if (returnDate && date > returnDate) {
-            // ✨ date > returnDate
             return true;
         }
         return false;
     };
     const disableReturnDates = (date: Date) => {
-        // 1. Deshabilitar fechas pasadas
+        //Disable past dates
         if (disablePastDates(date)) {
             return true;
         }
-        // 2. Si departureDate está seleccionada, deshabilitar cualquier fecha de regreso anterior a departureDate
+        //If departureDate is selected, disable any return dates prior to departureDate
         if (departureDate && date < departureDate) {
-            // ✨ date < departureDate
             return true;
         }
         return false;
@@ -67,7 +60,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         setIsAlertDialogOpen(true);
     };
     const handleConfirmBooking = () => {
-        alert(`¡Reserva para el vuelo a ${flight?.destination} confirmada!`);
+        alert(`Flight booking to ${flight?.destination} confirmed!`);
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
@@ -84,20 +77,18 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     }
 
     const areAllEssentialFieldsFilled = () => {
-        // 1. Validar fechas de salida y regreso
+        //Validate departure and return dates
         if (!departureDate || !returnDate) {
             return false;
         }
 
-        // 2. Validar los detalles de cada viajero
-        // Asegúrate de que el array travelerDetails tenga la misma cantidad de elementos que numberOfTravelers
+        //Validate the travelerDetails array has the same number of items as numberOfTravelers
         if (travelerDetails.length !== numberOfTravelers) {
             return false;
         }
 
         for (let i = 0; i < numberOfTravelers; i++) {
             const traveler = travelerDetails[i];
-            // Si el objeto del viajero no existe o alguno de sus campos esenciales está vacío/undefined
             if (
                 !traveler ||
                 !traveler.fullName ||
@@ -105,17 +96,17 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                 !traveler.documentNumber ||
                 !traveler.dateOfBirth
             ) {
-                return false; // Falta información para este viajero
+                return false;
             }
         }
         if (hasPets && (numberOfPets === undefined || numberOfPets <= 0)) {
-            return false; // Si tiene mascotas, debe haber un número válido de mascotas
+            return false; 
         }
         if (hasExtraBags && (numberOfExtraBags === undefined || numberOfExtraBags <= 0)) {
-            return false; // Si tiene maletas extra, debe haber un número válido de maletas
+            return false; 
         }
 
-        // Si todas las comprobaciones pasaron
+        //if all validations passed
         return true;
     };
     return (
@@ -126,7 +117,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                         <SheetTitle>Flight Details</SheetTitle>
                     </SheetHeader>
 
-                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm px-">
+                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm">
                         {flight ? (
                             <div className="p-4 text-gray-900">
                                 <div className="flex items-center gap-3 mb-1">
@@ -150,10 +141,10 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                     <div className="flex w-full space-x-1 items-center">
                                         <CornerUpLeft />
                                         <DateInput
-                                            selectedDate={returnDate} // Pasa el estado de regreso
-                                            onDateSelect={setReturnDate} // Pasa la acción para actualizar el regreso
+                                            selectedDate={returnDate}
+                                            onDateSelect={setReturnDate} 
                                             placeholderText="Return"
-                                            disabledPredicate={disableReturnDates} // Pasa la función para deshabilitar fechas de regreso
+                                            disabledPredicate={disableReturnDates} 
                                         />
                                     </div>
                                 </div>
@@ -161,7 +152,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                             </div>
                         ) : (
                             <p className="p-4 text-gray-900">
-                                Selecciona un vuelo para ver sus detalles.
+                                    Select a flight to see its details.
                             </p>
                         )}
                     </ScrollArea>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flight, FlightConfirmationDialogProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
+import { FlightConfirmationDialogProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
 
 import {
     AlertDialog,
@@ -47,7 +47,7 @@ export function FlightConfirmationDialog({
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Confirmar Reserva de Vuelo</AlertDialogTitle>
+                    <AlertDialogTitle>Confirm Flight Booking</AlertDialogTitle>
                     <AlertDialogDescription className="space-y-4 text-gray-800">
 
 
@@ -55,42 +55,41 @@ export function FlightConfirmationDialog({
                         {flight && (
                             <div className="border-t pt-4">
                                 <h3 className="text-lg font-bold mb-2 text-blue-900">
-                                    ✈️ Detalles del Vuelo
+                                    ✈️ Flight Details
                                 </h3>
-                                <span>
-                                    <strong>Destino:</strong> {flight.destination}
-                                </span>
+                                <div>
+                                    <strong>Destination:</strong> {flight.destination}
+                                </div>
 
-                                <span>
-                                    <strong>Fecha de Salida:</strong>{' '}
+                                <div>
+                                    <strong>Departure:</strong>{' '}
                                     {departureDate
                                         ? new Date(departureDate).toLocaleDateString()
-                                        : 'No especificada'}
-                                </span>
-                                <span>
-                                    <strong>Fecha de Salida:</strong>{' '}
-                                    {departureDate
-                                        ? new Date(departureDate).toLocaleDateString()
-                                        : 'No especificada'}
-                                </span>
+                                        : 'Not specified'}
+                                </div>
+                                <div>
+                                    <strong>Return:</strong>{' '}
+                                    {returnDate
+                                        ? new Date(returnDate).toLocaleDateString()
+                                        : 'Not specified'}
+                                </div>
 
-                                <span>
+                                <div>
                                     <strong>Clase:</strong>{' '}
                                     {flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
-                                </span>
-                                <span>
-                                    <strong>Cantidad de Viajeros:</strong> {numberOfTravelers}
-                                </span>
+                                </div>
+                                <div>
+                                    <strong>Passengers:</strong> {numberOfTravelers}
+                                </div>
                             </div>
                         )}
 
-                        {/* --- Información de los Viajeros --- */}
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-bold mb-2 text-blue-900">
-                                👥 Información de los Viajeros
+                                👥 Passengers Details
                             </h3>
-                            <ScrollArea className="max-h-60 overflow-y-scroll">
-                                {/* Mapea solo los viajeros necesarios según numberOfTravelers */}
+                            <ScrollArea className="max-h-60 overflow-y-scroll border rounded-lg ring-1 ring-muted-foreground p-2">
+
                                 {travelerDetails
                                     .slice(0, numberOfTravelers)
                                     .map((traveler, index) => (
@@ -99,23 +98,23 @@ export function FlightConfirmationDialog({
                                             className="mb-3 p-3 border rounded-md bg-gray-50 shadow-sm"
                                         >
                                             <p className="font-semibold text-md mb-1">
-                                                Viajero {index + 1}:
+                                                Passenger {index + 1}:
                                             </p>
                                             <p>
-                                                <strong>Nombre Completo:</strong>{' '}
+                                                <strong>Full Name:</strong>{' '}
                                                 {traveler.fullName}
                                             </p>
                                             <p>
-                                                <strong>Tipo Doc.:</strong>{' '}
+                                                <strong>Doc.:</strong>{' '}
                                                 {traveler.documentType.toUpperCase()}
                                             </p>
                                             <p>
-                                                <strong>Número Doc.:</strong>{' '}
+                                                <strong>Doc. Number:</strong>{' '}
                                                 {traveler.documentNumber}
                                             </p>
                                             {traveler.dateOfBirth && (
                                                 <p>
-                                                    <strong>Fecha de Nacimiento:</strong>{' '}
+                                                    <strong>Birthdate:</strong>{' '}
                                                     {new Date(
                                                         traveler.dateOfBirth,
                                                     ).toLocaleDateString()}
@@ -126,22 +125,19 @@ export function FlightConfirmationDialog({
                             </ScrollArea>
                         </div>
 
-                        {/* --- Opcionales (Mascotas, Maletas Extra) --- */}
                         {(hasPets || hasExtraBags) && (
                             <div className="border-t pt-4">
                                 <h3 className="text-lg font-bold mb-2 text-blue-900">
-                                    🎒 Opcionales
+                                    🎒 Optionals
                                 </h3>
                                 {hasPets && (
                                     <p>
-                                        <strong>Mascotas:</strong> {numberOfPets}{' '}
-                                        {numberOfPets === 1 ? 'mascota' : 'mascotas'}
+                                        <strong>Pets:</strong> {numberOfPets}{' '}
                                     </p>
                                 )}
                                 {hasExtraBags && (
                                     <p>
-                                        <strong>Maletas Extra:</strong> {numberOfExtraBags}{' '}
-                                        {numberOfExtraBags === 1 ? 'maleta' : 'maletas'}
+                                        <strong>Extra Bags:</strong> {numberOfExtraBags}{' '}
                                     </p>
                                 )}
                             </div>

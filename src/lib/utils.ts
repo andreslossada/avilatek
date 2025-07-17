@@ -15,14 +15,10 @@ export const formatDate = (date: Date | undefined) => {
 };
 
 export const stringToDate = (dateString: string): Date | undefined => {
-    // Intenta crear un objeto Date a partir de la cadena.
     const date = new Date(dateString);
-
-    // Valida si la fecha es válida.
-    // new Date() con una cadena no válida a menudo resulta en un objeto Date con un valor NaN.
     if (isNaN(date.getTime())) {
-        console.error(`Error: La cadena "${dateString}" no es un formato de fecha válido.`);
-        return undefined; // Retorna null si la cadena no se puede convertir a una fecha válida
+        console.error(`Error: String "${dateString}" has invalid format.`);
+        return undefined; 
     }
 
     return date;

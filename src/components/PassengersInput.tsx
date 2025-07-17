@@ -10,21 +10,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-// Si tu PassengerCounter no es relevante aquí directamente, puedes removerlo.
-// Si maneja el numero de viajeros y lo muestra, entonces esta bien que este.
 import { PassengerCounter } from './PassengerCounter';
-import { ContactRound, IdCard, PawPrint, Briefcase } from 'lucide-react'; // ✨ Nuevos iconos para mascotas y maletas
+import { ContactRound, IdCard, PawPrint, Briefcase } from 'lucide-react';
 import { DateInput } from './DateInput';
-import { Switch } from '@/components/ui/switch'; // ✨ Necesitas este componente de Shadcn UI
-import { Label } from '@/components/ui/label'; // ✨ Y este componente de Shadcn UI para las etiquetas de Switch
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { ClassInput } from './ClassInput';
+import { DOCUMENT_TYPES } from "@/lib/constants";
 
 export function PassengersInput() {
     const {
         numberOfTravelers,
         travelerDetails,
         setTravelerDetails,
-        // ✨ Nuevos estados y acciones para los opcionales
         hasPets,
         setHasPets,
         numberOfPets,
@@ -34,12 +32,6 @@ export function PassengersInput() {
         numberOfExtraBags,
         setNumberOfExtraBags,
     } = useSearchFormStore();
-
-    const documentTypes = [
-        { value: 'dni', label: 'DNI' },
-        { value: 'passport', label: 'Passport' },
-        { value: 'other', label: 'Otro' },
-    ];
 
     const handleTravelerDetailChange = (
         index: number,
@@ -63,7 +55,6 @@ export function PassengersInput() {
         setTravelerDetails(updatedDetails);
     };
 
-    // Función para deshabilitar fechas futuras (para fecha de nacimiento)
     const disableFutureDates = (date: Date) => date > new Date();
 
     return (
@@ -116,12 +107,10 @@ export function PassengersInput() {
                             }
                         >
                             <SelectTrigger id={`documentType-${index}`} className="w-auto">
-                                {' '}
-                                {/* Ajusta el ancho */}
                                 <SelectValue placeholder="Tipo" />
                             </SelectTrigger>
                             <SelectContent>
-                                {documentTypes.map((type) => (
+                                {DOCUMENT_TYPES.map((type) => (
                                     <SelectItem key={type.value} value={type.value}>
                                         {type.label}
                                     </SelectItem>
@@ -130,22 +119,25 @@ export function PassengersInput() {
                         </Select>
                         <Input
                             id={`documentNumber-${index}`}
-                            placeholder="Número de Identificación"
+                            placeholder="ID number"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={travelerDetails[index]?.documentNumber || ''}
-                            onChange={(e) =>
-                                handleTravelerDetailChange(index, 'documentNumber', e.target.value)
-                            }
+                            onChange={(e) => {
+                                const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                handleTravelerDetailChange(index, 'documentNumber', numericValue);
+                            }}
                             className="w-2/3"
                         />
                     </div>
                 </div>
             ))}
 
-            {/* --- Seccion de Opcionales --- */}
+            {/* --- Optionals --- */}
             <div className="space-y-4 mt-8 pt-4 border-t">
                 <h3 className="text-sm font-bold">Optional</h3>
 
-                {/* ¿Viajas con mascotas? */}
                 <div className="flex items-center justify-start space-x-3 h-6">
                     <div className="flex items-center gap-2">
                         <PawPrint className="h-5 w-5 text-muted-foreground" />
@@ -166,7 +158,6 @@ export function PassengersInput() {
                     )}
                 </div>
 
-                {/* ¿Necesitas maletas extra? */}
                 <div className="flex items-center justify-start space-x-3  h-6 ">
                     <div className="flex items-center gap-2">
                         <Briefcase className="h-5 w-5 text-muted-foreground" />

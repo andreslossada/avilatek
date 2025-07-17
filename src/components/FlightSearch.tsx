@@ -1,12 +1,11 @@
 'use client';
 
-import { Calendar, MapPin, Users, Search, Plus, Minus } from 'lucide-react';
+import { MapPin, Users, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { FlightSearchFormProps, SearchFormData } from '@/types/types';
 import { useSearchFormStore } from '@/store/searchFormStore';
@@ -15,9 +14,6 @@ import { DateInput } from './DateInput';
 import { PassengerCounter } from './PassengerCounter';
 
 export function FlightSearchForm({ onSubmit }: FlightSearchFormProps) {
-    // const [destination, setDestination] = useState<string>('');
-    // const [passengers, setPassengers] = useState(1)
-    // const [classType, setClassType] = useState<FlightClassOptions>("Economy")
 
     const {
         destination,
@@ -28,7 +24,6 @@ export function FlightSearchForm({ onSubmit }: FlightSearchFormProps) {
         setReturnDate,
         flightClass,
         numberOfTravelers,
-        setNumberOfTravelers,
     } = useSearchFormStore();
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -47,55 +42,22 @@ export function FlightSearchForm({ onSubmit }: FlightSearchFormProps) {
         }
     };
 
-    const formatDate = (date: Date | undefined) => {
-        if (!date) return 'Select date';
-        return date.toLocaleDateString('es-ES', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-        });
-    };
-
-    const incrementPassengers = () => {
-        if (numberOfTravelers < 10) {
-            setNumberOfTravelers(numberOfTravelers + 1);
-        }
-    };
-
-    const decrementPassengers = () => {
-        if (numberOfTravelers > 1) {
-            setNumberOfTravelers(numberOfTravelers - 1);
-        }
-    };
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
-    const handlePassengerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        if (!isNaN(value) && value >= 1 && value <= 10) {
-            setNumberOfTravelers(value);
-        } else if (e.target.value === '') {
-            setNumberOfTravelers(1);
-        }
-    };
+
     const disableDepartureDates = (date: Date) => {
-        // 1. Deshabilitar fechas pasadas
         if (disablePastDates(date)) {
             return true;
         }
-        // 2. Si returnDate está seleccionada, deshabilitar cualquier fecha de salida posterior a returnDate
         if (returnDate && date > returnDate) {
-            // ✨ date > returnDate
             return true;
         }
         return false;
     };
     const disableReturnDates = (date: Date) => {
-        // 1. Deshabilitar fechas pasadas
         if (disablePastDates(date)) {
             return true;
         }
-        // 2. Si departureDate está seleccionada, deshabilitar cualquier fecha de regreso anterior a departureDate
         if (departureDate && date < departureDate) {
-            // ✨ date < departureDate
             return true;
         }
         return false;
@@ -150,7 +112,7 @@ export function FlightSearchForm({ onSubmit }: FlightSearchFormProps) {
                                     className={cn(
                                         'inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md text-sm transition-all',
                                         'h-9  py-2 w-full px-4 cursor-pointer',
-                                        'border bg-background text-foreground hover:bg-accent hover:text-accent-foreground text-muted-foreground',
+                                        'border bg-background hover:bg-accent hover:text-accent-foreground text-muted-foreground',
                                     )}
                                 >
                                     <Users className="h-4 w-4" />

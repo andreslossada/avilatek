@@ -1,13 +1,11 @@
 // hooks/useFlights.ts
 import { useState, useEffect } from 'react';
-import { Flight } from '@/types/types'; // Asegúrate de que la ruta sea correcta
+import { Flight } from '@/types/types'; 
 
 interface UseFlightsResult {
     flights: Flight[];
     isLoading: boolean;
     error: string | null;
-    // Si necesitaras un botón para "recargar" los vuelos:
-    // refetch: () => void;
 }
 
 export function useFlights(): UseFlightsResult {
@@ -30,7 +28,7 @@ export function useFlights(): UseFlightsResult {
                 setFlights(data as Flight[]);
             } catch (err) {
                 console.error('Failed to fetch flights:', err);
-                setError('No pudimos cargar los vuelos. Intenta de nuevo más tarde.');
+                setError('We were unable to load the flights. Please try again later.');
             } finally {
                 setIsLoading(false);
             }
