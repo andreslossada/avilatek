@@ -15,6 +15,7 @@ import { useSearchFormStore } from '@/store/searchFormStore';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
+import { Check, Package, Plane, Users } from "lucide-react";
 
 export function FlightConfirmationDialog({
     isOpen,
@@ -32,6 +33,8 @@ export function FlightConfirmationDialog({
         numberOfPets,
         hasExtraBags,
         numberOfExtraBags,
+        hasInsurance,
+        hasPreferentialSeating,
     } = useSearchFormStore();
 
     let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
@@ -54,8 +57,8 @@ export function FlightConfirmationDialog({
                         {/* --- Detalles del Vuelo --- */}
                         {flight && (
                             <div className="border-t pt-4">
-                                <h3 className="text-lg font-bold mb-2 text-blue-900">
-                                    ✈️ Flight Details
+                                <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
+                                    <Plane className="text-muted-foreground" />Flight Details
                                 </h3>
                                 <div>
                                     <strong>Destination:</strong> {flight.destination}
@@ -85,8 +88,8 @@ export function FlightConfirmationDialog({
                         )}
 
                         <div className="border-t pt-4">
-                            <h3 className="text-lg font-bold mb-2 text-blue-900">
-                                👥 Passengers Details
+                            <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
+                                <Users className="text-muted-foreground" />Passengers Details
                             </h3>
                             <ScrollArea className="max-h-60 overflow-y-scroll border rounded-lg ring-1 ring-muted-foreground p-2">
 
@@ -125,27 +128,42 @@ export function FlightConfirmationDialog({
                             </ScrollArea>
                         </div>
 
-                        {(hasPets || hasExtraBags) && (
+                        {(hasPets || hasExtraBags || hasInsurance || hasPreferentialSeating) && (
                             <div className="border-t pt-4">
-                                <h3 className="text-lg font-bold mb-2 text-blue-900">
-                                    🎒 Optionals
+                                <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
+                                    <Package className="text-muted-foreground" />Additional 
                                 </h3>
                                 {hasPets && (
-                                    <p>
+                                    <p className="flex items-center gap-2 ">
+                                        <Check className="size-4 mt-[1px]" />
                                         <strong>Pets:</strong> {numberOfPets}{' '}
                                     </p>
                                 )}
                                 {hasExtraBags && (
-                                    <p>
+                                    <p className="flex items-center gap-2 ">
+                                        <Check className="size-4 mt-[1px]" />
                                         <strong>Extra Bags:</strong> {numberOfExtraBags}{' '}
+                                    </p>
+                                )}
+                                {hasInsurance && (
+                                    <p className="flex items-center gap-2 ">
+                                        <Check className="size-4 mt-[1px]" />
+                                        <strong>Insurance included</strong>
+                                    </p>
+                                )}
+                                {hasPreferentialSeating && (
+                                    <p className="flex items-center gap-2 ">
+                                        <Check className="size-4 mt-[1px]" />
+                                        <strong>Preferential Seating</strong>
                                     </p>
                                 )}
                             </div>
                         )}
 
+
                         {/* --- Costo Total --- */}
-                        <p className="text-2xl font-extrabold mt-6 text-green-900">
-                            Total: ${totalPrice.toFixed(2)} USD
+                        <p className="text-2xl font-bold mt-6 ">
+                            Total: <span className="text-green-900">${totalPrice.toFixed(2)} USD</span>
                         </p>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -154,7 +172,7 @@ export function FlightConfirmationDialog({
                         <Button variant="outline">Cancel</Button>
                     </AlertDialogCancel>
                     <AlertDialogAction asChild>
-                        <Button onClick={onConfirm}>Confirma</Button>
+                        <Button onClick={onConfirm}>Confirm</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

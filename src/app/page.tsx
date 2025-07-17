@@ -39,9 +39,9 @@ export default function Home() {
         setShowAllActive(false);
     };
     const handleShowAllFlights = () => {
-        setFilteredFlights(allFlights); // Establece los vuelos filtrados a todos los vuelos disponibles
-        setShowAllActive(true); // Activa el estado para indicar que se están mostrando todos
-        setSearchParams(null); // Opcional: Limpia los parámetros de búsqueda si se muestran todos
+        setFilteredFlights(allFlights);
+        setShowAllActive(true);
+        setSearchParams(null); 
     };
 
     const handleFlightSelect = (flight: Flight) => {
@@ -49,7 +49,6 @@ export default function Home() {
         setIsSheetOpen(true);
     };
 
-    // Determina qué lista de vuelos mostrar
     const flightsToDisplay = showAllActive ? allFlights : filteredFlights;
 
     return (

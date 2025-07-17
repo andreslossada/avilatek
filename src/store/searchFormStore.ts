@@ -34,6 +34,11 @@ interface SearchFormState {
     hasExtraBags: boolean; // ¿Necesita maletas extra?
     numberOfExtraBags: number; // Cantidad de maletas extra (opcional, si hasExtraBags es true)
 
+    hasInsurance: boolean; // ¿Tiene seguro de viaje? (opcional)
+
+    hasPreferentialSeating: boolean; // ¿Prefiere asientos especiales? (opcional)
+
+
     // -----------------------------------------------------
     // 2. Acciones para modificar el estado (funciones setter)
     // -----------------------------------------------------
@@ -49,6 +54,9 @@ interface SearchFormState {
 
     setHasExtraBags: (has: boolean) => void;
     setNumberOfExtraBags: (count?: number) => void;
+
+    setHasInsurance: (has: boolean) => void;
+    setHasPreferentialSeating: (has: boolean) => void;
 }
 
 // -----------------------------------------------------
@@ -69,11 +77,16 @@ export const useSearchFormStore = create<SearchFormState>((set) => ({
     hasExtraBags: false,
     numberOfExtraBags: 0, // undefined por defecto si no hay maletas extra
 
+    hasInsurance: false, // Seguro de viaje por defecto es false
+    hasPreferentialSeating: false, // Asientos preferenciales por defecto es false
+
     // -- Implementación de las acciones --
     setDestination: (destination) => set({ destination }),
     setDepartureDate: (date) => set({ departureDate: date }),
     setReturnDate: (date) => set({ returnDate: date }),
     setFlightClass: (fc) => set({ flightClass: fc }),
+    setHasPreferentialSeating: (has) => set({ hasPreferentialSeating: has }),
+    setHasInsurance: (has) => set({ hasInsurance: has }),
 
     setNumberOfTravelers: (count) => {
         // Asegura que el número de viajeros esté entre 1 y 10 (o los límites que necesites)
@@ -121,4 +134,5 @@ export const useSearchFormStore = create<SearchFormState>((set) => ({
             numberOfExtraBags: has ? (state.numberOfExtraBags ?? 0) : undefined,
         })),
     setNumberOfExtraBags: (count) => set({ numberOfExtraBags: count }),
+
 }));

@@ -11,7 +11,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { PassengerCounter } from './PassengerCounter';
-import { ContactRound, IdCard, PawPrint, Briefcase } from 'lucide-react';
+import { ContactRound, IdCard, PawPrint, Briefcase, Shield, Crown } from 'lucide-react';
 import { DateInput } from './DateInput';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -31,6 +31,10 @@ export function PassengersInput() {
         setHasExtraBags,
         numberOfExtraBags,
         setNumberOfExtraBags,
+        hasInsurance,
+        setHasInsurance,
+        hasPreferentialSeating,
+        setHasPreferentialSeating,
     } = useSearchFormStore();
 
     const handleTravelerDetailChange = (
@@ -69,7 +73,7 @@ export function PassengersInput() {
                     key={travelerDetails[index]?.id || `traveler-form-${index}`}
                     className="border p-4 rounded-md space-y-3 shadow"
                 >
-                    <h3 className="text-sm font-semibold">Viajero {index + 1}</h3>
+                    <h3 className="text-sm font-semibold">Passenger {index + 1}</h3>
 
                     {/* Name */}
                     <div className="flex gap-2 items-center">
@@ -180,6 +184,32 @@ export function PassengersInput() {
                             className="w-16 ml-auto"
                         />
                     )}
+                </div>
+                <div className="flex items-center justify-start space-x-3  h-6 ">
+                    <div className="flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-muted-foreground" />
+                        <Label htmlFor="has-extra-bags" className="text-base cursor-pointer">
+                            Insurance
+                        </Label>
+                    </div>
+                    <Switch
+                        id="has-extra-bags"
+                        checked={hasInsurance}
+                        onCheckedChange={setHasInsurance}
+                    />
+                </div>
+                <div className="flex items-center justify-start space-x-3  h-6 ">
+                    <div className="flex items-center gap-2">
+                        <Crown className="h-5 w-5 text-muted-foreground" />
+                        <Label htmlFor="has-extra-bags" className="text-base cursor-pointer">
+                            Preferential Seating
+                        </Label>
+                    </div>
+                    <Switch
+                        id="has-extra-bags"
+                        checked={hasPreferentialSeating}
+                        onCheckedChange={setHasPreferentialSeating}
+                    />
                 </div>
             </div>
         </div>
