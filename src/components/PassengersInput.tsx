@@ -11,6 +11,7 @@ import { ContactRound, IdCard, PawPrint, Briefcase } from "lucide-react"; // ✨
 import { DateInput } from "./DateInput";
 import { Switch } from '@/components/ui/switch'; // ✨ Necesitas este componente de Shadcn UI
 import { Label } from '@/components/ui/label'; // ✨ Y este componente de Shadcn UI para las etiquetas de Switch
+import { ClassInput } from "./ClassInput";
 
 export function PassengersInput() {
     const {
@@ -30,7 +31,7 @@ export function PassengersInput() {
 
     const documentTypes = [
         { value: 'dni', label: 'DNI' },
-        { value: 'passport', label: 'Pasaporte' },
+        { value: 'passport', label: 'Passport' },
         { value: 'other', label: 'Otro' },
     ];
 
@@ -57,9 +58,11 @@ export function PassengersInput() {
 
 
     return (
-        <div className="space-y-6 mt-8">
-            <h2 className="text-lg font-bold">Información de los Viajeros</h2>
-            <PassengerCounter /> {/* Asumo que este componente controla numberOfTravelers */}
+        <div className="space-y-6 mt-5">
+            <div className="flex justify-between ">
+                <ClassInput sheet />
+                <PassengerCounter />
+            </div>
 
             {Array.from({ length: numberOfTravelers }).map((_, index) => (
                 <div key={travelerDetails[index]?.id || `traveler-form-${index}`} className="border p-4 rounded-md space-y-3 shadow">
@@ -78,12 +81,14 @@ export function PassengersInput() {
                     </div>
 
                     {/* Birthday */}
-                    <div className="flex gap-2 items-center text-muted-foreground">
+                    <div className="flex gap-2 items-center ">
                         <DateInput
                             selectedDate={travelerDetails[index]?.dateOfBirth}
                             onDateSelect={(date) => handleTravelerDetailChange(index, 'dateOfBirth', date)}
                             placeholderText="Birthdate" // Etiqueta más concisa aquí
                             disabledPredicate={disableFutureDates}
+                            calendarCaptionLayout='dropdown'
+
                         />
                     </div>
 
@@ -93,12 +98,12 @@ export function PassengersInput() {
                             value={travelerDetails[index]?.documentType || ''}
                             onValueChange={(value) => handleTravelerDetailChange(index, 'documentType', value)}
                         >
-                            <SelectTrigger id={`documentType-${index}`} className="w-1/3"> {/* Ajusta el ancho */}
+                            <SelectTrigger id={`documentType-${index}`} className="w-auto"> {/* Ajusta el ancho */}
                                 <SelectValue placeholder="Tipo" />
                             </SelectTrigger>
                             <SelectContent>
                                 {documentTypes.map((type) => (
-                                    <SelectItem key={type.value} value={type.value}>
+                                    <SelectItem key={type.value} value={type.value} >
                                         {type.label}
                                     </SelectItem>
                                 ))}
@@ -117,7 +122,7 @@ export function PassengersInput() {
 
             {/* --- Seccion de Opcionales --- */}
             <div className="space-y-4 mt-8 pt-4 border-t">
-                <h3 className="text-sm font-bold">Opcionales</h3>
+                <h3 className="text-sm font-bold">Optional</h3>
 
                 {/* ¿Viajas con mascotas? */}
                 <div className="flex items-center justify-start space-x-3 h-6">

@@ -70,4 +70,5 @@ export interface DateInputProps {
     placeholderText: string; // Texto a mostrar cuando no hay fecha seleccionada
     disabledPredicate?: (date: Date) => boolean; // Función opcional para deshabilitar fechas
     // Puedes añadir más props si necesitas personalizar otros aspectos (ej. className)
+    calendarCaptionLayout?: "dropdown" | "label" | "dropdown-months" | "dropdown-years"
   }

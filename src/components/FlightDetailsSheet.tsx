@@ -133,7 +133,6 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                         />
                                     </div>
                                 </div>
-                                <ClassInput sheet />
                                 <PassengersInput />
                         </div>
                     ) : (
