@@ -9,19 +9,18 @@ import {
     SheetFooter,
     SheetHeader,
     SheetTitle,
-} from "@/components/ui/sheet"; // Ajusta la ruta si es diferente
-import { FlightConfirmationDialog } from "./FlightConfirmationDialog";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { useSearchFormStore } from "@/store/searchFormStore";
-import { ClassInput } from "./ClassInput";
-import { DateInput } from "./DateInput";
-import { PassengersInput } from "./PassengersInput";
-import { ScrollArea } from "./ui/scroll-area";
-import { CornerUpLeft, CornerUpRight, Plane } from "lucide-react";
+} from '@/components/ui/sheet'; // Ajusta la ruta si es diferente
+import { FlightConfirmationDialog } from './FlightConfirmationDialog';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { useSearchFormStore } from '@/store/searchFormStore';
+import { ClassInput } from './ClassInput';
+import { DateInput } from './DateInput';
+import { PassengersInput } from './PassengersInput';
+import { ScrollArea } from './ui/scroll-area';
+import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
 
 // Define las props que este componente recibirá
-
 
 export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
@@ -31,7 +30,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         returnDate,
         setReturnDate,
         numberOfTravelers, // Necesario para iterar los viajeros
-        travelerDetails
+        travelerDetails,
     } = useSearchFormStore();
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
     const disableDepartureDates = (date: Date) => {
@@ -40,7 +39,8 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
             return true;
         }
         // 2. Si returnDate está seleccionada, deshabilitar cualquier fecha de salida posterior a returnDate
-        if (returnDate && date > returnDate) { // ✨ date > returnDate
+        if (returnDate && date > returnDate) {
+            // ✨ date > returnDate
             return true;
         }
         return false;
@@ -51,22 +51,24 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
             return true;
         }
         // 2. Si departureDate está seleccionada, deshabilitar cualquier fecha de regreso anterior a departureDate
-        if (departureDate && date < departureDate) { // ✨ date < departureDate
+        if (departureDate && date < departureDate) {
+            // ✨ date < departureDate
             return true;
         }
         return false;
     };
 
-
     const handleSelectFlight = () => {
-        setIsAlertDialogOpen(true); 
+        setIsAlertDialogOpen(true);
     };
     const handleConfirmBooking = () => {
         alert(`¡Reserva para el vuelo a ${flight?.destination} confirmada!`);
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
-    const totalPrice = flight ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers : 0;
+    const totalPrice = flight
+        ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers
+        : 0;
 
     const areAllEssentialFieldsFilled = () => {
         // 1. Validar fechas de salida y regreso
@@ -101,23 +103,25 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         <>
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="right" className="px-4 bg-gray-100 ">
-
                     <SheetHeader className="px-0 pb-0">
                         <SheetTitle>Flight Details</SheetTitle>
                     </SheetHeader>
 
                     <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm">
-                    {flight ? (
+                        {flight ? (
                             <div className="p-4 text-gray-900">
                                 <div className="flex items-center gap-3 mb-1">
                                     <Plane />
-                                    <h4 className="text-xl font-bold mb-2"> {flight.destination}</h4>
+                                    <h4 className="text-xl font-bold mb-2">
+                                        {' '}
+                                        {flight.destination}
+                                    </h4>
                                 </div>
                                 <div className="flex gap-2">
-
                                     <div className="flex w-full space-x-1 items-center">
                                         <CornerUpRight />
-                                        <DateInput selectedDate={departureDate}
+                                        <DateInput
+                                            selectedDate={departureDate}
                                             onDateSelect={setDepartureDate}
                                             placeholderText="Departure"
                                             disabledPredicate={disableDepartureDates}
@@ -126,7 +130,8 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
 
                                     <div className="flex w-full space-x-1 items-center">
                                         <CornerUpLeft />
-                                        <DateInput selectedDate={returnDate} // Pasa el estado de regreso
+                                        <DateInput
+                                            selectedDate={returnDate} // Pasa el estado de regreso
                                             onDateSelect={setReturnDate} // Pasa la acción para actualizar el regreso
                                             placeholderText="Return"
                                             disabledPredicate={disableReturnDates} // Pasa la función para deshabilitar fechas de regreso
@@ -134,20 +139,28 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                     </div>
                                 </div>
                                 <PassengersInput />
-                        </div>
-                    ) : (
-                        <p className="p-4 text-gray-900">Selecciona un vuelo para ver sus detalles.</p>
-                    )}
+                            </div>
+                        ) : (
+                            <p className="p-4 text-gray-900">
+                                Selecciona un vuelo para ver sus detalles.
+                            </p>
+                        )}
                     </ScrollArea>
 
                     <SheetFooter className="px-0 pt-0">
-                        <p className="text-2xl font-bold my-1 text-green-900 ml-auto">Total: ${totalPrice}</p>
-                        <Button onClick={handleSelectFlight} disabled={!areAllEssentialFieldsFilled()}>Continue</Button>
+                        <p className="text-2xl font-bold my-1 text-green-900 ml-auto">
+                            Total: ${totalPrice}
+                        </p>
+                        <Button
+                            onClick={handleSelectFlight}
+                            disabled={!areAllEssentialFieldsFilled()}
+                        >
+                            Continue
+                        </Button>
                         <SheetClose asChild>
-                            <Button variant="outline" >Close</Button>
+                            <Button variant="outline">Close</Button>
                         </SheetClose>
                     </SheetFooter>
-
                 </SheetContent>
             </Sheet>
             <FlightConfirmationDialog
