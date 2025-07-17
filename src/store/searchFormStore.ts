@@ -29,10 +29,10 @@ interface SearchFormState {
     travelerDetails: TravelerDetail[]; // Array para los detalles de cada viajero
 
     hasPets: boolean; // ¿Viaja con mascotas?
-    numberOfPets?: number; // Cantidad de mascotas (opcional, si hasPets es true)
+    numberOfPets: number; // Cantidad de mascotas (opcional, si hasPets es true)
 
     hasExtraBags: boolean; // ¿Necesita maletas extra?
-    numberOfExtraBags?: number; // Cantidad de maletas extra (opcional, si hasExtraBags es true)
+    numberOfExtraBags: number; // Cantidad de maletas extra (opcional, si hasExtraBags es true)
 
     // -----------------------------------------------------
     // 2. Acciones para modificar el estado (funciones setter)
@@ -64,10 +64,10 @@ export const useSearchFormStore = create<SearchFormState>((set) => ({
     travelerDetails: [], // Array vacío inicialmente, se poblará según `numberOfTravelers`
 
     hasPets: false,
-    numberOfPets: undefined, // undefined por defecto si no hay mascotas
+    numberOfPets: 0, // undefined por defecto si no hay mascotas
 
     hasExtraBags: false,
-    numberOfExtraBags: undefined, // undefined por defecto si no hay maletas extra
+    numberOfExtraBags: 0, // undefined por defecto si no hay maletas extra
 
     // -- Implementación de las acciones --
     setDestination: (destination) => set({ destination }),

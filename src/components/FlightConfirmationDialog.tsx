@@ -14,6 +14,7 @@ import {
 import { useSearchFormStore } from '@/store/searchFormStore';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
+import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
 
 export function FlightConfirmationDialog({
     isOpen,
@@ -32,19 +33,23 @@ export function FlightConfirmationDialog({
         hasExtraBags,
         numberOfExtraBags,
     } = useSearchFormStore();
-    console.log(`🚀 ~ departureDate:`, departureDate);
 
-    const totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
+    let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
+
+    if (hasPets && numberOfPets > 0) {
+        totalPrice += numberOfPets * COST_PER_PET;
+    }
+
+    if (hasExtraBags && numberOfExtraBags > 0) {
+        totalPrice += numberOfExtraBags * COST_PER_EXTRA_BAG;
+    }
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirmar Reserva de Vuelo</AlertDialogTitle>
                     <AlertDialogDescription className="space-y-4 text-gray-800">
-                        <p className="mb-4">
-                            Por favor, revisa cuidadosamente la información de tu reserva antes de
-                            confirmar:
-                        </p>
+
 
                         {/* --- Detalles del Vuelo --- */}
                         {flight && (
@@ -52,30 +57,30 @@ export function FlightConfirmationDialog({
                                 <h3 className="text-lg font-bold mb-2 text-blue-900">
                                     ✈️ Detalles del Vuelo
                                 </h3>
-                                <p>
+                                <span>
                                     <strong>Destino:</strong> {flight.destination}
-                                </p>
+                                </span>
 
-                                <p>
+                                <span>
                                     <strong>Fecha de Salida:</strong>{' '}
                                     {departureDate
                                         ? new Date(departureDate).toLocaleDateString()
                                         : 'No especificada'}
-                                </p>
-                                <p>
+                                </span>
+                                <span>
                                     <strong>Fecha de Salida:</strong>{' '}
                                     {departureDate
                                         ? new Date(departureDate).toLocaleDateString()
                                         : 'No especificada'}
-                                </p>
+                                </span>
 
-                                <p>
+                                <span>
                                     <strong>Clase:</strong>{' '}
                                     {flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
-                                </p>
-                                <p>
+                                </span>
+                                <span>
                                     <strong>Cantidad de Viajeros:</strong> {numberOfTravelers}
-                                </p>
+                                </span>
                             </div>
                         )}
 
@@ -124,7 +129,7 @@ export function FlightConfirmationDialog({
                         {/* --- Opcionales (Mascotas, Maletas Extra) --- */}
                         {(hasPets || hasExtraBags) && (
                             <div className="border-t pt-4">
-                                <h3 className="text-lg font-bold mb-2 text-blue-700">
+                                <h3 className="text-lg font-bold mb-2 text-blue-900">
                                     🎒 Opcionales
                                 </h3>
                                 {hasPets && (

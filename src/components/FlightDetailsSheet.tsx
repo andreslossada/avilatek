@@ -19,17 +19,22 @@ import { DateInput } from './DateInput';
 import { PassengersInput } from './PassengersInput';
 import { ScrollArea } from './ui/scroll-area';
 import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
+import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
 
 // Define las props que este componente recibirá
 
 export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
     const {
+        returnDate,
         departureDate,
         setDepartureDate,
-        returnDate,
         setReturnDate,
-        numberOfTravelers, // Necesario para iterar los viajeros
+        numberOfTravelers,
+        hasPets,
+        numberOfPets,
+        hasExtraBags,
+        numberOfExtraBags,
         travelerDetails,
     } = useSearchFormStore();
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
@@ -66,9 +71,17 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
-    const totalPrice = flight
+    let totalPrice = flight
         ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers
         : 0;
+
+    if (hasPets && numberOfPets > 0) {
+        totalPrice += (numberOfPets ?? 0) * COST_PER_PET;
+    }
+
+    if (hasExtraBags && numberOfExtraBags > 0) {
+        totalPrice += (numberOfExtraBags ?? 0) * COST_PER_EXTRA_BAG;
+    }
 
     const areAllEssentialFieldsFilled = () => {
         // 1. Validar fechas de salida y regreso
@@ -95,19 +108,25 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                 return false; // Falta información para este viajero
             }
         }
+        if (hasPets && (numberOfPets === undefined || numberOfPets <= 0)) {
+            return false; // Si tiene mascotas, debe haber un número válido de mascotas
+        }
+        if (hasExtraBags && (numberOfExtraBags === undefined || numberOfExtraBags <= 0)) {
+            return false; // Si tiene maletas extra, debe haber un número válido de maletas
+        }
 
         // Si todas las comprobaciones pasaron
         return true;
     };
     return (
         <>
-            <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="right" className="px-4 bg-gray-100 ">
+            <Sheet open={isOpen} onOpenChange={onOpenChange} >
+                <SheetContent side="right" className="px-4 bg-gray-100 w-[90vw]">
                     <SheetHeader className="px-0 pb-0">
                         <SheetTitle>Flight Details</SheetTitle>
                     </SheetHeader>
 
-                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm">
+                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm px-">
                         {flight ? (
                             <div className="p-4 text-gray-900">
                                 <div className="flex items-center gap-3 mb-1">
