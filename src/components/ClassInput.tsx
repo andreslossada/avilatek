@@ -10,7 +10,7 @@ export function ClassInput({ sheet }: { sheet?: boolean }) {
             onValueChange={(selectedValue: FlightClassOptions) => setFlightClass(selectedValue)}
         >   
             <SelectTrigger className="flex items-center space-x-2 " >
-                <Sofa className="size-5 " />
+                <Sofa className="size-5" />
                 <SelectValue placeholder={flightClass.charAt(0).toUpperCase() + flightClass.slice(1)} />
             </SelectTrigger>
             <SelectContent >

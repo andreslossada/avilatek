@@ -6,7 +6,7 @@ import { create } from 'zustand';
 // 1. Tipos de datos para el estado del formulario
 // -----------------------------------------------------
 
-export type FlightClassOptions = "economy" | "business" | "first" | "any";
+export type FlightClassOptions = "Economy" | "Business" | "First Class" | "Any Class";
 
 export interface TravelerDetail {
   id: string; // Un ID único para identificar a cada viajero
@@ -59,7 +59,7 @@ export const useSearchFormStore = create<SearchFormState>((set) => ({
   destination: '',
   departureDate: undefined,
   returnDate: undefined,
-  flightClass: 'any', // 'Cualquier Clase' como valor inicial por defecto
+  flightClass: 'Any Class', // 'Cualquier Clase' como valor inicial por defecto
   numberOfTravelers: 1, // Mínimo 1 viajero
   travelerDetails: [], // Array vacío inicialmente, se poblará según `numberOfTravelers`
 
