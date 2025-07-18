@@ -41,7 +41,7 @@ export default function Home() {
 
         if (!isLoading && hasSearched && filteredFlights.length > 0) {
             return (
-                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-blue-900">
+                <div className="mt-8 py-4 px-3 bg-white bg-opacity-90 rounded-lg shadow-lg text-blue-900">
                     <h2 className="text-lg font-bold  px-4">Found ({filteredFlights.length}):</h2>
                     <ul className="space-y-4">
                         {filteredFlights.map((flight, index) => (
@@ -78,7 +78,7 @@ export default function Home() {
     };
 
     return (
-        <section className="relative font-sans grid md:items-center items-baseline p-0 justify-items-center min-h-screen   px-4  ">
+        <section className="relative font-sans grid md:items-center items-baseline p-0 justify-items-center min-h-screen  ">
             <div className="fixed inset-0 z-0">
                 <Image
                     src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop"
@@ -89,12 +89,13 @@ export default function Home() {
                 />
             </div>
             <div className="relative z-10 text-white max-w-4xl  content-end mb-24">
-                <div className=" mx-auto mb-0 px-4 ">
-                    <h1 className="mb-6 text-4xl md:text-6xl text-shadow-md">Find Your Perfect Flight</h1>
-                    <p className="text-lg md:text-xl text-muted mb-8">
+                <div className=" mx-auto mb-0 px-5 ">
+                    <h1 className="mb-6 text-4xl md:text-6xl text-shadow-md ">Find Your Perfect Flight</h1>
+                    <p className="text-lg md:text-xl text-muted">
                         Search and book flights to destinations worldwide with the best prices
-                        guaranteed. Your journey starts here.
+                        guaranteed. 
                     </p>
+                    <p className="text-lg md:text-lg text-muted mb-8">Your journey starts here.</p>
                 </div>
                 <FlightSearchForm />
                 <div className="absolute w-full">

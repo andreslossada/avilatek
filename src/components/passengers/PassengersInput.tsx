@@ -123,7 +123,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                             }
                         >
                             <SelectTrigger id={`documentType-${index}`} className="w-auto">
-                                <SelectValue placeholder="Tipo" />
+                                <SelectValue placeholder="Type" />
                             </SelectTrigger>
                             <SelectContent>
                                 {DOCUMENT_TYPES.map((type) => (

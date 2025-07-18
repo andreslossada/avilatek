@@ -1,9 +1,7 @@
 import { Flight } from '@/types/types';
 import { create } from 'zustand';
 
-// -----------------------------------------------------
 // Types
-// -----------------------------------------------------
 
 export type FlightClassOptions = 'Economy' | 'Business' | 'First Class' | 'Any Class';
 
@@ -12,20 +10,19 @@ export interface TravelerDetail {
     fullName: string;
     documentType: string;
     documentNumber: string;
-    dateOfBirth?: Date;
+    dateOfBirth: Date | undefined;
 }
 
 //FORM
 interface SearchFormState {
-    // Información del Viaje --
+
     destination: string;
-    departureDate?: Date; // Puede ser undefined si no se ha seleccionado
-    returnDate?: Date; // Puede ser undefined si no se ha seleccionado
-    flightClass: FlightClassOptions; // Clase de vuelo
+    departureDate?: Date; 
+    returnDate?: Date; 
+    flightClass: FlightClassOptions; 
     numberOfTravelers: number;
 
-    // Información de los Viajeros y Opcionales --
-    travelerDetails: TravelerDetail[]; // Array para los detalles de cada viajero
+    travelerDetails: TravelerDetail[]; 
 
     hasPets: boolean;
     numberOfPets: number;
@@ -35,7 +32,8 @@ interface SearchFormState {
     hasPreferentialSeating: boolean;
     hasSpecialNeeds: boolean;
     specialAssistanceDescription: string;
-
+    dateOfBirth?: Date;
+    // -----------------------------------------------------
     availableFlights: Flight[];
     filteredFlights: Flight[];
 
@@ -44,9 +42,8 @@ interface SearchFormState {
     isLoading: boolean;
     error: string | null;
 
-    // -----------------------------------------------------
     // Actions
-    // -----------------------------------------------------
+
     setHasSearched: (value: boolean) => void;
     setAvailableFlights: (flights: Flight[]) => void;
     setFilteredFlights: (flights: Flight[]) => void;
@@ -59,6 +56,7 @@ interface SearchFormState {
     setTravelerDetails: (details: TravelerDetail[]) => void;
     setHasSpecialNeeds: (has: boolean) => void;
     setSpecialAssistanceDescription: (description: string) => void;
+    setDateOfBirth: (date?: Date) => void;
 
     setHasPets: (has: boolean) => void;
     setNumberOfPets: (count?: number) => void;
@@ -72,17 +70,14 @@ interface SearchFormState {
     setError: (error: string | null) => void;
 }
 
-// -----------------------------------------------------
 // Create store
-// -----------------------------------------------------
 export const useSearchFormStore = create<SearchFormState>((set, get) => ({
-    // -- Valores iniciales del estado --
     destination: '',
     departureDate: undefined,
     returnDate: undefined,
-    flightClass: 'Any Class', // 'Cualquier Clase' como valor inicial por defecto
+    flightClass: 'Any Class',
     numberOfTravelers: 1,
-    travelerDetails: [], // Array vacío inicialmente, se poblará según `numberOfTravelers`
+    travelerDetails: [], 
 
     hasPets: false,
     numberOfPets: 0,
@@ -94,6 +89,7 @@ export const useSearchFormStore = create<SearchFormState>((set, get) => ({
     hasPreferentialSeating: false,
     hasSpecialNeeds: false,
     specialAssistanceDescription: '',
+    dateOfBirth: undefined,
 
     availableFlights: [],
     filteredFlights: [],
@@ -117,15 +113,14 @@ export const useSearchFormStore = create<SearchFormState>((set, get) => ({
     setHasInsurance: (has) => set({ hasInsurance: has }),
     setHasSpecialNeeds: (hasNeeds) => set({ hasSpecialNeeds: hasNeeds }),
     setSpecialAssistanceDescription: (description) => set({ specialAssistanceDescription: description }),
+    setDateOfBirth: (date) => set({ dateOfBirth: date }),
 
 
     setNumberOfTravelers: (count) => {
-        // Asegura que el número de viajeros esté entre 1 y 10 (o los límites que necesites)
+
         const newCount = Math.max(1, Math.min(10, count));
         set((state) => {
-            // Ajusta el array travelerDetails:
-            // Si se reduce el número, corta el array.
-            // Si se aumenta, añade nuevos objetos de viajero con valores por defecto.
+
             const updatedTravelerDetails = Array.from({ length: newCount }, (_, i) => {
                 return (
                     state.travelerDetails[i] || {

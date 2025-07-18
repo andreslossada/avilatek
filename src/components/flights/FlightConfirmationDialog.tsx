@@ -16,6 +16,7 @@ import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { Check, Package, Plane, Users } from 'lucide-react';
+import { calculateAge } from "@/lib/utils";
 
 export function FlightConfirmationDialog({
     isOpen,
@@ -109,6 +110,9 @@ export function FlightConfirmationDialog({
                                     </p>
                                     <p>
                                         <strong>Full Name:</strong> {traveler.fullName}
+                                    </p>
+                                    <p>
+                                        <strong>Age:</strong> {calculateAge(traveler.dateOfBirth)} years
                                     </p>
                                     <p>
                                         <strong>Doc.:</strong> {traveler.documentType.toUpperCase()}

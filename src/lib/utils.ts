@@ -23,3 +23,22 @@ export const stringToDate = (dateString: string): Date | undefined => {
 
     return date;
 };
+
+export function calculateAge(birthDate: Date | undefined): number | null   {
+    if (birthDate === undefined) {
+        return null; 
+      }
+    const today: Date = new Date();
+    const dob: Date = new Date(birthDate);
+  
+    let age: number = today.getFullYear() - dob.getFullYear();
+    const monthDiff: number = today.getMonth() - dob.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+  
+    return age;
+  }
+
+  
