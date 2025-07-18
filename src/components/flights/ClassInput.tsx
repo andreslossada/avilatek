@@ -6,7 +6,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from './ui/select';
+} from '../ui/select';
 import { FlightClassOptions } from '@/types/types';
 import { Sofa } from 'lucide-react';
 

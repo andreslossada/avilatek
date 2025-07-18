@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlightConfirmationDialogProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
+import { FlightConfirmationDialogProps } from '@/types/types'; // Asegúrate de que la ruta sea correcta
 
 import {
     AlertDialog,
@@ -12,8 +12,8 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog'; // Ajusta la ruta si es diferente
 import { useSearchFormStore } from '@/store/searchFormStore';
-import { Button } from './ui/button';
-import { ScrollArea } from './ui/scroll-area';
+import { Button } from '../ui/button';
+import { ScrollArea } from '../ui/scroll-area';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
 import { Check, Package, Plane, Users } from "lucide-react";
 
@@ -131,7 +131,7 @@ export function FlightConfirmationDialog({
                         {(hasPets || hasExtraBags || hasInsurance || hasPreferentialSeating) && (
                             <div className="border-t pt-4">
                                 <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
-                                    <Package className="text-muted-foreground" />Additional 
+                                    <Package className="text-muted-foreground" />Additional
                                 </h3>
                                 {hasPets && (
                                     <p className="flex items-center gap-2 ">

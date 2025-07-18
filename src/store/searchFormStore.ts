@@ -1,47 +1,52 @@
-// src/store/searchFormStore.ts
-
+import { Flight } from "@/types/types";
 import { create } from 'zustand';
 
 // -----------------------------------------------------
-// 1. Tipos de datos para el estado del formulario
+// Types
 // -----------------------------------------------------
 
 export type FlightClassOptions = 'Economy' | 'Business' | 'First Class' | 'Any Class';
 
 export interface TravelerDetail {
-    id: string; // Un ID único para identificar a cada viajero
+    id: string; 
     fullName: string;
     documentType: string;
     documentNumber: string;
-    dateOfBirth?: Date; // Fecha de nacimiento (opcional)
+    dateOfBirth?: Date; 
 }
 
-// Interfaz que define la forma completa del estado de tu store
+//FORM
 interface SearchFormState {
-    // -- Paso 1: Información del Viaje --
+    // Información del Viaje --
     destination: string;
     departureDate?: Date; // Puede ser undefined si no se ha seleccionado
     returnDate?: Date; // Puede ser undefined si no se ha seleccionado
     flightClass: FlightClassOptions; // Clase de vuelo
     numberOfTravelers: number;
 
-    // -- Paso 2: Información de los Viajeros y Opcionales --
+    // Información de los Viajeros y Opcionales --
     travelerDetails: TravelerDetail[]; // Array para los detalles de cada viajero
 
-    hasPets: boolean; // ¿Viaja con mascotas?
-    numberOfPets: number; // Cantidad de mascotas (opcional, si hasPets es true)
+    hasPets: boolean;
+    numberOfPets: number;
+    hasExtraBags: boolean; 
+    numberOfExtraBags: number; 
+    hasInsurance: boolean;
+    hasPreferentialSeating: boolean; 
 
-    hasExtraBags: boolean; // ¿Necesita maletas extra?
-    numberOfExtraBags: number; // Cantidad de maletas extra (opcional, si hasExtraBags es true)
+    availableFlights: Flight[];
+    filteredFlights: Flight[];
 
-    hasInsurance: boolean; // ¿Tiene seguro de viaje? (opcional)
-
-    hasPreferentialSeating: boolean; // ¿Prefiere asientos especiales? (opcional)
+    hasSearched: boolean;
 
 
     // -----------------------------------------------------
-    // 2. Acciones para modificar el estado (funciones setter)
+    // Actions
     // -----------------------------------------------------
+     setHasSearched: (value: boolean) => void;
+    setAvailableFlights: (flights: Flight[]) => void;
+    setFilteredFlights: (flights: Flight[]) => void;
+    
     setDestination: (destination: string) => void;
     setDepartureDate: (date?: Date) => void;
     setReturnDate: (date?: Date) => void;
@@ -60,27 +65,37 @@ interface SearchFormState {
 }
 
 // -----------------------------------------------------
-// 3. Creación de la store de Zustand
+// Create store
 // -----------------------------------------------------
-export const useSearchFormStore = create<SearchFormState>((set) => ({
+export const useSearchFormStore = create<SearchFormState>((set,get) => ({
     // -- Valores iniciales del estado --
     destination: '',
     departureDate: undefined,
     returnDate: undefined,
     flightClass: 'Any Class', // 'Cualquier Clase' como valor inicial por defecto
-    numberOfTravelers: 1, // Mínimo 1 viajero
+    numberOfTravelers: 1, 
     travelerDetails: [], // Array vacío inicialmente, se poblará según `numberOfTravelers`
 
     hasPets: false,
-    numberOfPets: 0, // undefined por defecto si no hay mascotas
+    numberOfPets: 0, 
 
     hasExtraBags: false,
-    numberOfExtraBags: 0, // undefined por defecto si no hay maletas extra
+    numberOfExtraBags: 0, 
 
-    hasInsurance: false, // Seguro de viaje por defecto es false
-    hasPreferentialSeating: false, // Asientos preferenciales por defecto es false
+    hasInsurance: false, 
+    hasPreferentialSeating: false, 
 
-    // -- Implementación de las acciones --
+    availableFlights: [],
+    filteredFlights: [],
+
+    hasSearched: false,
+
+    setAvailableFlights: (flights) => set({ availableFlights: flights }),
+    setFilteredFlights: (flights) => set({ filteredFlights: flights }),
+    setHasSearched: (value: boolean) => set({ hasSearched: value }), // ✨ Implementa la nueva acción
+
+
+
     setDestination: (destination) => set({ destination }),
     setDepartureDate: (date) => set({ departureDate: date }),
     setReturnDate: (date) => set({ returnDate: date }),
@@ -98,11 +113,11 @@ export const useSearchFormStore = create<SearchFormState>((set) => ({
             const updatedTravelerDetails = Array.from({ length: newCount }, (_, i) => {
                 return (
                     state.travelerDetails[i] || {
-                        id: `traveler-${i + 1}`, // Un ID simple (puedes usar una UUID real para mayor robustez)
+                        id: `traveler-${i + 1}`, 
                         fullName: '',
                         documentType: '',
                         documentNumber: '',
-                        dateOfBirth: undefined, // Asegúrate de que la fecha de nacimiento se inicialice también
+                        dateOfBirth: undefined,
                     }
                 );
             });
@@ -115,22 +130,18 @@ export const useSearchFormStore = create<SearchFormState>((set) => ({
 
     setTravelerDetails: (details) => set({ travelerDetails: details }),
 
-    // ✨ Acciones para mascotas
+    // PETS
     setHasPets: (has) =>
         set((state) => ({
             hasPets: has,
-            // Si 'has' es false, reinicia numberOfPets a undefined.
-            // Si 'has' es true, mantiene el valor actual o lo establece en 0 si es undefined.
             numberOfPets: has ? (state.numberOfPets ?? 0) : undefined,
         })),
     setNumberOfPets: (count) => set({ numberOfPets: count }),
 
-    // ✨ Acciones para maletas extra
+    //BAGS
     setHasExtraBags: (has) =>
         set((state) => ({
             hasExtraBags: has,
-            // Similar a mascotas, si 'has' es false, reinicia numberOfExtraBags a undefined.
-            // Si 'has' es true, mantiene el valor actual o lo establece en 0 si es undefined.
             numberOfExtraBags: has ? (state.numberOfExtraBags ?? 0) : undefined,
         })),
     setNumberOfExtraBags: (count) => set({ numberOfExtraBags: count }),

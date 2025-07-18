@@ -1,6 +1,6 @@
 import { useSearchFormStore } from '@/store/searchFormStore';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import { Minus, Plus, User } from 'lucide-react';
 
 export function PassengerCounter() {

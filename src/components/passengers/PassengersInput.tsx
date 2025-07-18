@@ -12,10 +12,10 @@ import {
 } from '@/components/ui/select';
 import { PassengerCounter } from './PassengerCounter';
 import { ContactRound, IdCard, PawPrint, Briefcase, Shield, Crown } from 'lucide-react';
-import { DateInput } from './DateInput';
+import { DateInput } from '../flights/DateInput';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ClassInput } from './ClassInput';
+import { ClassInput } from '../flights/ClassInput';
 import { DOCUMENT_TYPES } from "@/lib/constants";
 
 export function PassengersInput() {

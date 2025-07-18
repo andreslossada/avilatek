@@ -11,9 +11,12 @@ import { FlightSearchFormProps, SearchFormData } from '@/types/types';
 import { useSearchFormStore } from '@/store/searchFormStore';
 import { ClassInput } from './ClassInput';
 import { DateInput } from './DateInput';
-import { PassengerCounter } from './PassengerCounter';
+import { PassengerCounter } from '../passengers/PassengerCounter';
+import { useFlights } from "@/hooks/useFlights";
 
-export function FlightSearchForm({ onSubmit }: FlightSearchFormProps) {
+export function FlightSearchForm() {
+    const { isLoading, error, fetchFlights } = useFlights();
+
 
     const {
         destination,
@@ -24,23 +27,38 @@ export function FlightSearchForm({ onSubmit }: FlightSearchFormProps) {
         setReturnDate,
         flightClass,
         numberOfTravelers,
+        availableFlights,
+
+        setFilteredFlights,
+        setHasSearched,
+
     } = useSearchFormStore();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
 
-        const formData: SearchFormData = {
-            destination,
-            departureDate,
-            returnDate,
-            numberOfTravelers,
-            flightClass,
-        };
-
-        if (onSubmit) {
-            onSubmit(formData);
-        }
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        setHasSearched(true)
+        await fetchFlights({ destination, departureDate, returnDate, flightClass });
+        const flightsToFilter = availableFlights;
+        const newFilteredFlights = flightsToFilter.filter(flight => {
+            if (destination) {
+                if (!flight.destination.toLowerCase().includes(destination.toLowerCase())) {
+                    return false;
+                }
+            }
+            console.log(flight)
+            if (flightClass !== 'Any Class') {
+                if (flight.class.toLowerCase() !== flightClass.toLowerCase()) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        setFilteredFlights(newFilteredFlights);
     };
+
+
+
 
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
 

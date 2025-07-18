@@ -13,7 +13,7 @@ export interface SearchFormData {
     departureDate?: Date;
     returnDate?: Date;
     numberOfTravelers: number;
-    flightClass: FlightClassOptions;
+    flightClass?: FlightClassOptions;
 }
 
 export interface FlightSearchFormProps {
@@ -35,14 +35,8 @@ export interface FlightDetailsSheetProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     flight: Flight | null; 
-    search: SearchFormData | null;
 }
 
-export interface UseFlightsResult {
-    allFlights: Flight[];
-    isLoading: boolean;
-    error: string | null;
-}
 
 export interface SearchFormState {
     destination: string;
@@ -65,3 +59,17 @@ export interface DateInputProps {
     disabledPredicate?: (date: Date) => boolean; 
     calendarCaptionLayout?: 'dropdown' | 'label' | 'dropdown-months' | 'dropdown-years';
 }
+
+
+// useFlights hook interface
+export interface FlightSearchParams {
+    destination?: string; 
+    departureDate?: Date;
+    returnDate?: Date;
+    flightClass?:  FlightClassOptions;
+  }
+  export interface UseFlightsResult {
+isLoading: boolean;
+    error: string | null;
+    fetchFlights: (params?: FlightSearchParams) => Promise<void>; 
+  }

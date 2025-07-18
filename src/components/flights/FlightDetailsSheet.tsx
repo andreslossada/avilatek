@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlightDetailsSheetProps } from '../types/types'; // Asegúrate de que la ruta sea correcta
+import { FlightDetailsSheetProps } from '@/types/types'; // Asegúrate de que la ruta sea correcta
 
 import {
     Sheet,
@@ -10,11 +10,11 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet'; // Ajusta la ruta si es diferente
 import { FlightConfirmationDialog } from './FlightConfirmationDialog';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { useSearchFormStore } from '@/store/searchFormStore';
 import { DateInput } from './DateInput';
-import { PassengersInput } from './PassengersInput';
-import { ScrollArea } from './ui/scroll-area';
+import { PassengersInput } from '../passengers/PassengersInput';
+import { ScrollArea } from '../ui/scroll-area';
 import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
 
@@ -100,10 +100,10 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
             }
         }
         if (hasPets && (numberOfPets === undefined || numberOfPets <= 0)) {
-            return false; 
+            return false;
         }
         if (hasExtraBags && (numberOfExtraBags === undefined || numberOfExtraBags <= 0)) {
-            return false; 
+            return false;
         }
 
         //if all validations passed
@@ -142,9 +142,9 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                         <CornerUpLeft />
                                         <DateInput
                                             selectedDate={returnDate}
-                                            onDateSelect={setReturnDate} 
+                                            onDateSelect={setReturnDate}
                                             placeholderText="Return"
-                                            disabledPredicate={disableReturnDates} 
+                                            disabledPredicate={disableReturnDates}
                                         />
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                             </div>
                         ) : (
                             <p className="p-4 text-gray-900">
-                                    Select a flight to see its details.
+                                Select a flight to see its details.
                             </p>
                         )}
                     </ScrollArea>

@@ -25,3 +25,5 @@ export const DATE_PICKER_OPTIONS = {
 export const MAX_PETS = 3; 
 export const MAX_EXTRA_BAGS = 5; 
 export const MAX_TRAVELER_AGE = 120; 
+
+export const FLIGHT_API_URL = 'https://raw.githubusercontent.com/Lstanislao/cities-permalink/main/flights.json';

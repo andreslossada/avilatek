@@ -1,6 +1,6 @@
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Calendar as CalendarComponent } from './ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Calendar as CalendarComponent } from '../ui/calendar';
 import { cn, formatDate } from '@/lib/utils';
 import { DateInputProps } from '@/types/types';
 import { useState } from 'react';
