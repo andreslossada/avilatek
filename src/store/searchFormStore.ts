@@ -1,4 +1,4 @@
-import { Flight } from "@/types/types";
+import { Flight } from '@/types/types';
 import { create } from 'zustand';
 
 // -----------------------------------------------------
@@ -8,11 +8,11 @@ import { create } from 'zustand';
 export type FlightClassOptions = 'Economy' | 'Business' | 'First Class' | 'Any Class';
 
 export interface TravelerDetail {
-    id: string; 
+    id: string;
     fullName: string;
     documentType: string;
     documentNumber: string;
-    dateOfBirth?: Date; 
+    dateOfBirth?: Date;
 }
 
 //FORM
@@ -29,24 +29,26 @@ interface SearchFormState {
 
     hasPets: boolean;
     numberOfPets: number;
-    hasExtraBags: boolean; 
-    numberOfExtraBags: number; 
+    hasExtraBags: boolean;
+    numberOfExtraBags: number;
     hasInsurance: boolean;
-    hasPreferentialSeating: boolean; 
+    hasPreferentialSeating: boolean;
 
     availableFlights: Flight[];
     filteredFlights: Flight[];
 
     hasSearched: boolean;
 
+    isLoading: boolean;
+    error: string | null;
 
     // -----------------------------------------------------
     // Actions
     // -----------------------------------------------------
-     setHasSearched: (value: boolean) => void;
+    setHasSearched: (value: boolean) => void;
     setAvailableFlights: (flights: Flight[]) => void;
     setFilteredFlights: (flights: Flight[]) => void;
-    
+
     setDestination: (destination: string) => void;
     setDepartureDate: (date?: Date) => void;
     setReturnDate: (date?: Date) => void;
@@ -62,39 +64,44 @@ interface SearchFormState {
 
     setHasInsurance: (has: boolean) => void;
     setHasPreferentialSeating: (has: boolean) => void;
+    setIsLoading: (loading: boolean) => void;
+    setError: (error: string | null) => void;
 }
 
 // -----------------------------------------------------
 // Create store
 // -----------------------------------------------------
-export const useSearchFormStore = create<SearchFormState>((set,get) => ({
+export const useSearchFormStore = create<SearchFormState>((set, get) => ({
     // -- Valores iniciales del estado --
     destination: '',
     departureDate: undefined,
     returnDate: undefined,
     flightClass: 'Any Class', // 'Cualquier Clase' como valor inicial por defecto
-    numberOfTravelers: 1, 
+    numberOfTravelers: 1,
     travelerDetails: [], // Array vacío inicialmente, se poblará según `numberOfTravelers`
 
     hasPets: false,
-    numberOfPets: 0, 
+    numberOfPets: 0,
 
     hasExtraBags: false,
-    numberOfExtraBags: 0, 
+    numberOfExtraBags: 0,
 
-    hasInsurance: false, 
-    hasPreferentialSeating: false, 
+    hasInsurance: false,
+    hasPreferentialSeating: false,
 
     availableFlights: [],
     filteredFlights: [],
 
     hasSearched: false,
+    isLoading: false,
+    error: null,
 
     setAvailableFlights: (flights) => set({ availableFlights: flights }),
     setFilteredFlights: (flights) => set({ filteredFlights: flights }),
     setHasSearched: (value: boolean) => set({ hasSearched: value }), // ✨ Implementa la nueva acción
 
-
+    setIsLoading: (loading) => set({ isLoading: loading }),
+    setError: (error) => set({ error }),
 
     setDestination: (destination) => set({ destination }),
     setDepartureDate: (date) => set({ departureDate: date }),
@@ -113,7 +120,7 @@ export const useSearchFormStore = create<SearchFormState>((set,get) => ({
             const updatedTravelerDetails = Array.from({ length: newCount }, (_, i) => {
                 return (
                     state.travelerDetails[i] || {
-                        id: `traveler-${i + 1}`, 
+                        id: `traveler-${i + 1}`,
                         fullName: '',
                         documentType: '',
                         documentNumber: '',
@@ -145,5 +152,4 @@ export const useSearchFormStore = create<SearchFormState>((set,get) => ({
             numberOfExtraBags: has ? (state.numberOfExtraBags ?? 0) : undefined,
         })),
     setNumberOfExtraBags: (count) => set({ numberOfExtraBags: count }),
-
 }));

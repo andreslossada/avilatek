@@ -16,7 +16,7 @@ import { DateInput } from './DateInput';
 import { PassengersInput } from '../passengers/PassengersInput';
 import { ScrollArea } from '../ui/scroll-area';
 import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
-import { COST_PER_EXTRA_BAG, COST_PER_PET } from "@/lib/constants";
+import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 
 export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
@@ -64,9 +64,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
-    let totalPrice = flight
-        ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers
-        : 0;
+    let totalPrice = flight ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers : 0;
 
     if (hasPets && numberOfPets > 0) {
         totalPrice += (numberOfPets ?? 0) * COST_PER_PET;
@@ -111,7 +109,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     };
     return (
         <>
-            <Sheet open={isOpen} onOpenChange={onOpenChange} >
+            <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="right" className="px-4 bg-gray-100 w-[90vw]">
                     <SheetHeader className="px-0 pb-0">
                         <SheetTitle>Flight Details</SheetTitle>
@@ -151,9 +149,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                 <PassengersInput />
                             </div>
                         ) : (
-                            <p className="p-4 text-gray-900">
-                                Select a flight to see its details.
-                            </p>
+                            <p className="p-4 text-gray-900">Select a flight to see its details.</p>
                         )}
                     </ScrollArea>
 

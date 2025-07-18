@@ -1,79 +1,104 @@
 'use client';
+import Image from "next/image";
 import { useState } from 'react';
 import { FlightSearchForm } from '../components/flights/FlightSearch';
-import { Flight, SearchFormData } from '@/types/types';
+import { Flight } from '@/types/types';
 import { FlightCard } from '../components/flights/FlightCard';
 import { FlightDetailsSheet } from '@/components/flights/FlightDetailsSheet';
 import { useFlights } from '../hooks/useFlights';
-import { useSearchFormStore } from "@/store/searchFormStore";
+import { useSearchFormStore } from '@/store/searchFormStore';
+import { CardSkeleton } from '@/components/flights/CardSkeleton';
+import { NUMBER_SKELETONS } from '@/lib/constants';
 
 export default function Home() {
-
-    const { filteredFlights, setFilteredFlights } = useSearchFormStore();
+    const { filteredFlights, hasSearched } = useSearchFormStore();
     const { isLoading, error } = useFlights();
-
-
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
-
     const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-
-
 
     const handleFlightSelect = (flight: Flight) => {
         setSelectedFlight(flight);
         setIsSheetOpen(true);
     };
 
+    const renderFlightDisplay = () => {
+        if (isLoading && hasSearched) {
+            return (
+                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900">
+                    <h2 className="text-lg font-semibold text-muted-foreground mb-4 p-4">
+                        Searching...
+                    </h2>
+                    <ul className="space-y-4">
+                        {Array.from({ length: NUMBER_SKELETONS }).map((_, index) => (
+                            <li key={index}>
+                                <CardSkeleton />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
 
+        if (!isLoading && hasSearched && filteredFlights.length > 0) {
+            return (
+                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-blue-900">
+                    <h2 className="text-lg font-bold  px-4">Found ({filteredFlights.length}):</h2>
+                    <ul className="space-y-4">
+                        {filteredFlights.map((flight, index) => (
+                            <FlightCard
+                                key={`${index}-${flight.destination}-${flight.departureDate}-${flight.priceUSD}`}
+                                flight={flight}
+                                onSelect={handleFlightSelect}
+                            />
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        if (!isLoading && hasSearched && filteredFlights.length === 0) {
+            return (
+                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900 text-center">
+                    <p className="text-gray-600 text-center">Try looking for another city :( </p>
+                    <span className="text-[11px] text-muted-foreground">
+                        (New York, Madrid or Buenos aires)
+                    </span>
+                </div>
+            );
+        }
+
+        if (error && hasSearched) {
+            return (
+                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900">
+                    <p className="text-red-600 text-center">Error: {error}</p>
+                </div>
+            );
+        }
+        return null;
+    };
 
     return (
-        <section className="relative font-sans grid items-center justify-items-center min-h-screen  bg-gray-900 p-4">
-            <img
-                src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop"
-                alt="Airplane in sky"
-                className="  absolute inset-0 z-0 w-full h-full object-cover opacity-60"
-            />
-            <div className="relative z-10 text-white mb-28">
-                <div className=" max-w-3xl mx-auto mb-8 ">
-                    <h1 className="mb-6 text-4xl md:text-6xl">Find Your Perfect Flight</h1>
+        <section className="relative font-sans grid items-center p-0 justify-items-center min-h-screen   px-4 transition-all ">
+            <div className="fixed inset-0 z-0">
+                <Image
+                    src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop"
+                    alt="Airplane in sky"
+                    fill
+                    style={{ objectFit: 'cover', opacity: 0.6 }}
+                    priority
+                />
+            </div>
+            <div className="relative z-10 text-white max-w-4xl  content-end mb-24">
+                <div className=" mx-auto mb-0 px-4 ">
+                    <h1 className="mb-6 text-4xl md:text-6xl ">Find Your Perfect Flight</h1>
                     <p className="text-lg md:text-xl text-muted mb-8">
                         Search and book flights to destinations worldwide with the best prices
                         guaranteed. Your journey starts here.
                     </p>
                 </div>
                 <FlightSearchForm />
-
-                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900 max-w-3xl mx-auto">
-                    <h2 className="text-2xl font-bold mb-4">Flights</h2>
-                    {isLoading && <p>loading flights...</p>}
-                    {error && <p className="text-red-500">{error}</p>}
-                    {/* {!isLoading  && (
-                        <button
-                            onClick={handleShowAllFlights}
-                            className="mb-4 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >
-                            Show all flighs
-                        </button>
-                    )} */}
-                    {!isLoading && !error && filteredFlights.length === 0 && (
-                        <p>Not found</p>
-                    )}
-                    {!isLoading && !error && filteredFlights.length === 0 && (
-                        <p>Missing information</p>
-                    )}
-
-                    {!isLoading && !error && filteredFlights.length > 0 && (
-                        <ul className="space-y-4">
-                            {filteredFlights.map((flight, index) => (
-                                <FlightCard
-                                    key={`${index}-${flight.destination}-${flight.departureDate}-${flight.priceUSD}`}
-                                    flight={flight}
-                                    onSelect={handleFlightSelect}
-
-                                />
-                            ))}
-                        </ul>
-                    )}
+                <div className="absolute w-full">
+                    {renderFlightDisplay()}
                 </div>
             </div>
             <FlightDetailsSheet

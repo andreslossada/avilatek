@@ -18,7 +18,7 @@ export const stringToDate = (dateString: string): Date | undefined => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
         console.error(`Error: String "${dateString}" has invalid format.`);
-        return undefined; 
+        return undefined;
     }
 
     return date;

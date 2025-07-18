@@ -16,7 +16,7 @@ import { DateInput } from '../flights/DateInput';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ClassInput } from '../flights/ClassInput';
-import { DOCUMENT_TYPES } from "@/lib/constants";
+import { DOCUMENT_TYPES } from '@/lib/constants';
 
 export function PassengersInput() {
     const {

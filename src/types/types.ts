@@ -21,28 +21,27 @@ export interface FlightSearchFormProps {
 }
 export interface FlightCardProps {
     flight: Flight;
-    onSelect: (flight: Flight) => void; 
+    onSelect: (flight: Flight) => void;
 }
 
 export interface FlightConfirmationDialogProps {
     isOpen: boolean;
-    onOpenChange: (open: boolean) => void; 
-    flight: Flight | null; 
-    onConfirm: () => void; 
+    onOpenChange: (open: boolean) => void;
+    flight: Flight | null;
+    onConfirm: () => void;
 }
 
 export interface FlightDetailsSheetProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    flight: Flight | null; 
+    flight: Flight | null;
 }
-
 
 export interface SearchFormState {
     destination: string;
-    departureDate?: Date; 
-    returnDate?: Date; 
-    flightClass: FlightClassOptions; 
+    departureDate?: Date;
+    returnDate?: Date;
+    flightClass: FlightClassOptions;
     numberOfTravelers: number;
 
     setDestination: (destination: string) => void;
@@ -53,23 +52,22 @@ export interface SearchFormState {
 }
 
 export interface DateInputProps {
-    selectedDate?: Date; 
-    onDateSelect: (date?: Date) => void; 
-    placeholderText: string; 
-    disabledPredicate?: (date: Date) => boolean; 
+    selectedDate?: Date;
+    onDateSelect: (date?: Date) => void;
+    placeholderText: string;
+    disabledPredicate?: (date: Date) => boolean;
     calendarCaptionLayout?: 'dropdown' | 'label' | 'dropdown-months' | 'dropdown-years';
 }
 
-
 // useFlights hook interface
 export interface FlightSearchParams {
-    destination?: string; 
+    destination?: string;
     departureDate?: Date;
     returnDate?: Date;
-    flightClass?:  FlightClassOptions;
-  }
-  export interface UseFlightsResult {
-isLoading: boolean;
+    flightClass?: FlightClassOptions;
+}
+export interface UseFlightsResult {
+    isLoading: boolean;
     error: string | null;
-    fetchFlights: (params?: FlightSearchParams) => Promise<void>; 
-  }
+    fetchFlights: (params?: FlightSearchParams) => Promise<void>;
+}

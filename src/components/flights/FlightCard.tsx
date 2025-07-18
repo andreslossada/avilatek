@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { FlightCardProps } from '@/types/types';
-
 
 export function FlightCard({ flight, onSelect }: FlightCardProps) {
     return (
@@ -11,7 +9,6 @@ export function FlightCard({ flight, onSelect }: FlightCardProps) {
         >
             <div className="flex justify-between items-center">
                 <div>
-
                     <p className="font-semibold text-lg text-gray-900">{flight.destination}</p>
                     <p className="font-medium text-sm text-gray-700">{flight.class}</p>
                 </div>
@@ -19,7 +16,6 @@ export function FlightCard({ flight, onSelect }: FlightCardProps) {
                     ${flight.priceUSD} <span className="text-primary text-sm">each</span>
                 </p>
             </div>
-
         </li>
     );
 }
