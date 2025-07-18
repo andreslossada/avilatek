@@ -11,14 +11,18 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { PassengerCounter } from './PassengerCounter';
-import { ContactRound, IdCard, PawPrint, Briefcase, Shield, Crown } from 'lucide-react';
+import { ContactRound, IdCard, PawPrint, Briefcase, Shield, Crown, Sofa, Hospital } from 'lucide-react';
 import { DateInput } from '../flights/DateInput';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ClassInput } from '../flights/ClassInput';
 import { DOCUMENT_TYPES } from '@/lib/constants';
+import { Flight } from "@/types/types";
 
-export function PassengersInput() {
+interface PassengersInputProps {
+    flight?: Flight
+}
+
+export function PassengersInput({ flight }: PassengersInputProps) {
     const {
         numberOfTravelers,
         travelerDetails,
@@ -35,6 +39,11 @@ export function PassengersInput() {
         setHasInsurance,
         hasPreferentialSeating,
         setHasPreferentialSeating,
+        flightClass,
+        specialAssistanceDescription,
+        hasSpecialNeeds,
+        setHasSpecialNeeds,
+        setSpecialAssistanceDescription,
     } = useSearchFormStore();
 
     const handleTravelerDetailChange = (
@@ -63,8 +72,11 @@ export function PassengersInput() {
 
     return (
         <div className="space-y-6 mt-5">
-            <div className="flex justify-between ">
-                <ClassInput sheet />
+            <div className="flex justify-between items-center">
+                <p className="flex gap-2 text-base font-medium text-muted-foreground ">
+                    <Sofa />
+                    {flight && flight.class}
+                </p>
                 <PassengerCounter />
             </div>
 
@@ -211,6 +223,29 @@ export function PassengersInput() {
                         onCheckedChange={setHasPreferentialSeating}
                     />
                 </div>
+                <div className="flex items-center justify-start space-x-3  h-6 ">
+                    <div className="flex items-center gap-2">
+                        <Hospital className="h-5 w-5 text-muted-foreground" />
+                        <Label htmlFor="has-extra-bags" className="text-base cursor-pointer">
+                            Special Assistance
+                        </Label>
+                    </div>
+                    <Switch
+                        id="has-needs"
+                        checked={hasSpecialNeeds}
+                        onCheckedChange={setHasSpecialNeeds}
+                    />
+                </div>
+                {hasSpecialNeeds && (
+                    <Input
+                        id="desc-needs"
+                        type="text"
+                        value={specialAssistanceDescription || ''}
+                        onChange={(e) => setSpecialAssistanceDescription(e.target.value)}
+                        placeholder="Describe your needs"
+                        className="w-full"
+                    />
+                )}
             </div>
         </div>
     );

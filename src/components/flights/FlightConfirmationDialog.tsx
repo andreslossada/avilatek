@@ -35,6 +35,8 @@ export function FlightConfirmationDialog({
         numberOfExtraBags,
         hasInsurance,
         hasPreferentialSeating,
+        hasSpecialNeeds,
+        specialAssistanceDescription,
     } = useSearchFormStore();
 
     let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
@@ -153,6 +155,13 @@ export function FlightConfirmationDialog({
                                 <p className="flex items-center gap-2 ">
                                     <Check className="size-4 mt-[1px]" />
                                     <strong>Preferential Seating</strong>
+                                </p>
+                            )}
+                            {hasSpecialNeeds && (
+                                <p className="flex items-center gap-2 ">
+                                    <Check className="size-4 mt-[1px]" />
+                                    <strong>Special Assistance:</strong>{' '}
+                                    {specialAssistanceDescription || 'Not specified'}
                                 </p>
                             )}
                         </div>

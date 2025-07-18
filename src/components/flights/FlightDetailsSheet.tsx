@@ -31,6 +31,8 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         hasExtraBags,
         numberOfExtraBags,
         travelerDetails,
+        hasSpecialNeeds,
+        specialAssistanceDescription,
     } = useSearchFormStore();
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
     const disableDepartureDates = (date: Date) => {
@@ -103,6 +105,9 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         if (hasExtraBags && (numberOfExtraBags === undefined || numberOfExtraBags <= 0)) {
             return false;
         }
+        if (hasSpecialNeeds && !specialAssistanceDescription) {
+            return false;
+        }
 
         //if all validations passed
         return true;
@@ -146,7 +151,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                         />
                                     </div>
                                 </div>
-                                <PassengersInput />
+                                <PassengersInput flight={flight} />
                             </div>
                         ) : (
                             <p className="p-4 text-gray-900">Select a flight to see its details.</p>

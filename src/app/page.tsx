@@ -78,7 +78,7 @@ export default function Home() {
     };
 
     return (
-        <section className="relative font-sans grid items-center p-0 justify-items-center min-h-screen   px-4 transition-all ">
+        <section className="relative font-sans grid items-center p-0 justify-items-center min-h-screen   px-4  ">
             <div className="fixed inset-0 z-0">
                 <Image
                     src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop"

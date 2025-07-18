@@ -13,7 +13,7 @@ export function FlightCard({ flight, onSelect }: FlightCardProps) {
                     <p className="font-medium text-sm text-gray-700">{flight.class}</p>
                 </div>
                 <p className="text-xl font-bold text-green-900">
-                    ${flight.priceUSD} <span className="text-primary text-sm">each</span>
+                    ${flight.priceUSD} <span className="text-muted-foreground text-sm">each</span>
                 </p>
             </div>
         </li>

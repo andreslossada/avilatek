@@ -33,6 +33,8 @@ interface SearchFormState {
     numberOfExtraBags: number;
     hasInsurance: boolean;
     hasPreferentialSeating: boolean;
+    hasSpecialNeeds: boolean;
+    specialAssistanceDescription: string;
 
     availableFlights: Flight[];
     filteredFlights: Flight[];
@@ -55,6 +57,8 @@ interface SearchFormState {
     setFlightClass: (flightClass: FlightClassOptions) => void;
     setNumberOfTravelers: (count: number) => void;
     setTravelerDetails: (details: TravelerDetail[]) => void;
+    setHasSpecialNeeds: (has: boolean) => void;
+    setSpecialAssistanceDescription: (description: string) => void;
 
     setHasPets: (has: boolean) => void;
     setNumberOfPets: (count?: number) => void;
@@ -88,6 +92,8 @@ export const useSearchFormStore = create<SearchFormState>((set, get) => ({
 
     hasInsurance: false,
     hasPreferentialSeating: false,
+    hasSpecialNeeds: false,
+    specialAssistanceDescription: '',
 
     availableFlights: [],
     filteredFlights: [],
@@ -98,7 +104,7 @@ export const useSearchFormStore = create<SearchFormState>((set, get) => ({
 
     setAvailableFlights: (flights) => set({ availableFlights: flights }),
     setFilteredFlights: (flights) => set({ filteredFlights: flights }),
-    setHasSearched: (value: boolean) => set({ hasSearched: value }), // ✨ Implementa la nueva acción
+    setHasSearched: (value: boolean) => set({ hasSearched: value }), 
 
     setIsLoading: (loading) => set({ isLoading: loading }),
     setError: (error) => set({ error }),
@@ -109,6 +115,9 @@ export const useSearchFormStore = create<SearchFormState>((set, get) => ({
     setFlightClass: (fc) => set({ flightClass: fc }),
     setHasPreferentialSeating: (has) => set({ hasPreferentialSeating: has }),
     setHasInsurance: (has) => set({ hasInsurance: has }),
+    setHasSpecialNeeds: (hasNeeds) => set({ hasSpecialNeeds: hasNeeds }),
+    setSpecialAssistanceDescription: (description) => set({ specialAssistanceDescription: description }),
+
 
     setNumberOfTravelers: (count) => {
         // Asegura que el número de viajeros esté entre 1 y 10 (o los límites que necesites)
