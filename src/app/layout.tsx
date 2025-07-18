@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'Avilatek Reservas de Vuelos',
-    description: 'Reserva tus vuelos de manera fácil y rápida',
+    title: 'Globetrotter',
+    description: 'Book your next adventure with ease',
 };
 
 export default function RootLayout({

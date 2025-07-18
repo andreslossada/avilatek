@@ -244,6 +244,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                         onChange={(e) => setSpecialAssistanceDescription(e.target.value)}
                         placeholder="Describe your needs"
                         className="w-full"
+                        maxLength={200}
                     />
                 )}
             </div>

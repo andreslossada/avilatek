@@ -78,19 +78,19 @@ export default function Home() {
     };
 
     return (
-        <section className="relative font-sans grid items-center p-0 justify-items-center min-h-screen   px-4  ">
+        <section className="relative font-sans grid md:items-center items-baseline p-0 justify-items-center min-h-screen   px-4  ">
             <div className="fixed inset-0 z-0">
                 <Image
                     src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop"
                     alt="Airplane in sky"
                     fill
-                    style={{ objectFit: 'cover', opacity: 0.6 }}
+                    style={{ objectFit: 'cover', opacity: 0.5 }}
                     priority
                 />
             </div>
             <div className="relative z-10 text-white max-w-4xl  content-end mb-24">
                 <div className=" mx-auto mb-0 px-4 ">
-                    <h1 className="mb-6 text-4xl md:text-6xl ">Find Your Perfect Flight</h1>
+                    <h1 className="mb-6 text-4xl md:text-6xl text-shadow-md">Find Your Perfect Flight</h1>
                     <p className="text-lg md:text-xl text-muted mb-8">
                         Search and book flights to destinations worldwide with the best prices
                         guaranteed. Your journey starts here.
