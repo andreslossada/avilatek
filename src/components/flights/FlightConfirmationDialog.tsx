@@ -1,6 +1,5 @@
 import React from 'react';
-import { FlightConfirmationDialogProps } from '@/types/types'; // Asegúrate de que la ruta sea correcta
-
+import { FlightConfirmationDialogProps } from '@/types/types';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,7 +9,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from '@/components/ui/alert-dialog'; // Ajusta la ruta si es diferente
+} from '@/components/ui/alert-dialog';
 import { useSearchFormStore } from '@/store/searchFormStore';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';

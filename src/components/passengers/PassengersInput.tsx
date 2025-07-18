@@ -1,5 +1,3 @@
-// src/components/PassengersInput.tsx
-
 import React from 'react';
 import { useSearchFormStore, TravelerDetail } from '@/store/searchFormStore';
 import { Input } from '@/components/ui/input';

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { FlightDetailsSheetProps } from '@/types/types'; // Asegúrate de que la ruta sea correcta
-
+import { FlightDetailsSheetProps } from '@/types/types';
 import {
     Sheet,
     SheetClose,
@@ -8,7 +7,7 @@ import {
     SheetFooter,
     SheetHeader,
     SheetTitle,
-} from '@/components/ui/sheet'; // Ajusta la ruta si es diferente
+} from '@/components/ui/sheet';
 import { FlightConfirmationDialog } from './FlightConfirmationDialog';
 import { Button } from '../ui/button';
 import { useSearchFormStore } from '@/store/searchFormStore';

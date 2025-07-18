@@ -1,4 +1,3 @@
-import React from 'react';
 import { FlightCardProps } from '@/types/types';
 
 export function FlightCard({ flight, onSelect }: FlightCardProps) {

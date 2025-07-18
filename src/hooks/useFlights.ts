@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Flight, FlightSearchParams, UseFlightsResult } from '@/types/types';
 import { FETCH_DELAY, FLIGHT_API_URL } from '@/lib/constants';
 import { useSearchFormStore } from '@/store/searchFormStore';

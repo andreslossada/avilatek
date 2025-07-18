@@ -12,7 +12,6 @@ import { ClassInput } from './ClassInput';
 import { DateInput } from './DateInput';
 import { PassengerCounter } from '../passengers/PassengerCounter';
 import { useFlights } from '@/hooks/useFlights';
-import { useEffect } from 'react';
 
 export function FlightSearchForm() {
     const { fetchFlights } = useFlights();
@@ -50,7 +49,7 @@ export function FlightSearchForm() {
             }
             return true;
         });
-        // setFilteredFlights(newFilteredFlights);
+
         useSearchFormStore.getState().setFilteredFlights(newFilteredFlights);
     };
 
