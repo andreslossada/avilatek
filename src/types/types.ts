@@ -1,9 +1,21 @@
 export interface Flight {
-    destination: string;
+    destination_airport: Airport;
+    departure_airport: Airport;
     departureDate?: Date;
     returnDate?: Date;
-    priceUSD: number;
-    class: FlightClassOptions;
+    price: number;
+    class_type: string;
+    airline: Airline;
+    
+}
+export interface Airport {
+    iataCode: string;
+    name: string;
+}
+
+interface Airline {
+    iataCode: string;
+    name: string;
 }
 
 export type FlightClassOptions = 'Economy' | 'Business' | 'First Class' | 'Any Class';

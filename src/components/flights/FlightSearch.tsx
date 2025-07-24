@@ -34,21 +34,19 @@ export function FlightSearchForm() {
         event.preventDefault();
         setHasSearched(true);
         await fetchFlights({ destination, departureDate, returnDate, flightClass });
+
         const currentAvailableFlights = useSearchFormStore.getState().availableFlights;
 
         const newFilteredFlights = currentAvailableFlights.filter((flight) => {
+            // console.log(`🚀 ~ flight.destination_airport.name`, flight.destination_airport.name)
             if (destination) {
-                if (!flight.destination.toLowerCase().includes(destination.toLowerCase())) {
-                    return false;
-                }
-            }
-            if (flightClass !== 'Any Class') {
-                if (flight.class.toLowerCase() !== flightClass.toLowerCase()) {
+                if (!flight.destination_airport.name.toLowerCase().includes(destination.toLowerCase())) {
                     return false;
                 }
             }
             return true;
         });
+        console.log(`🚀 ~ newFilteredFlights ~ newFilteredFlights:`, newFilteredFlights)
 
         useSearchFormStore.getState().setFilteredFlights(newFilteredFlights);
     };

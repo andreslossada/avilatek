@@ -9,12 +9,17 @@ import { useFlights } from '../hooks/useFlights';
 import { useSearchFormStore } from '@/store/searchFormStore';
 import { CardSkeleton } from '@/components/flights/CardSkeleton';
 import { NUMBER_SKELETONS } from '@/lib/constants';
+import { supabase } from '@/lib/supabase'
+import { useEffect } from "react";
 
 export default function Home() {
     const { filteredFlights, hasSearched } = useSearchFormStore();
     const { isLoading, error } = useFlights();
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+
+
+
 
     const handleFlightSelect = (flight: Flight) => {
         setSelectedFlight(flight);
@@ -24,7 +29,7 @@ export default function Home() {
     const renderFlightDisplay = () => {
         if (isLoading && hasSearched) {
             return (
-                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900">
+                <div className="mt-8 p-4 border bg-opacity-90 rounded-lg shadow-lg text-gray-900">
                     <h2 className="text-lg font-semibold text-muted-foreground mb-4 p-4">
                         Searching...
                     </h2>
@@ -41,12 +46,12 @@ export default function Home() {
 
         if (!isLoading && hasSearched && filteredFlights.length > 0) {
             return (
-                <div className="mt-8 py-4 px-3 bg-white bg-opacity-90 rounded-lg shadow-lg text-blue-900">
-                    <h2 className="text-lg font-bold  px-4">Found ({filteredFlights.length}):</h2>
+                <div className="mt-8   bg-opacity-90 rounded-lg  ">
+                    <h2 className="text-lg font-bold  px-4 text-shadow-md pb-4">Found ({filteredFlights.length}):</h2>
                     <ul className="space-y-4">
                         {filteredFlights.map((flight, index) => (
                             <FlightCard
-                                key={`${index}-${flight.destination}-${flight.departureDate}-${flight.priceUSD}`}
+                                key={`${index}-${flight.departure_airport.name}-${flight.departureDate}-${flight.price}`}
                                 flight={flight}
                                 onSelect={handleFlightSelect}
                             />
@@ -93,9 +98,9 @@ export default function Home() {
                     <h1 className="mb-6 text-4xl md:text-6xl text-shadow-md ">Find Your Perfect Flight</h1>
                     <p className="text-lg md:text-xl text-muted">
                         Search and book flights to destinations worldwide with the best prices
-                        guaranteed. 
+                        guaranteed.
                     </p>
-                    <p className="text-lg md:text-lg text-muted mb-8">Your journey starts here.</p>
+                    <p className="text-lg md:text-lg text-muted  mb-8">Your journey starts here.</p>
                 </div>
                 <FlightSearchForm />
                 <div className="absolute w-full">

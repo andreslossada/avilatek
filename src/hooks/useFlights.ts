@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Flight, FlightSearchParams, UseFlightsResult } from '@/types/types';
 import { FETCH_DELAY, FLIGHT_API_URL } from '@/lib/constants';
 import { useSearchFormStore } from '@/store/searchFormStore';
+import {supabase} from '@/lib/supabase';
 
 export function useFlights(): UseFlightsResult {
     const { isLoading, setIsLoading } = useSearchFormStore();
@@ -18,11 +19,10 @@ export function useFlights(): UseFlightsResult {
             try {
                 await new Promise((resolve) => setTimeout(resolve, FETCH_DELAY));
 
-                const response = await fetch(FLIGHT_API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                const {data, error} = await supabase.from('flights').select('*');
+                if ( error) {
+                    throw new Error(`HTTP error! status: ${error.message}`);
                 }
-                const data = await response.json();
                 setAvailableFlights(data as Flight[]);
             } catch (err) {
                 console.error('Failed to fetch flights:', err);
@@ -36,3 +36,4 @@ export function useFlights(): UseFlightsResult {
 
     return { isLoading, error, fetchFlights };
 }
+
