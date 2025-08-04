@@ -6,15 +6,19 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '../ui/select';
-import { FlightClassOptions } from '@/types/types';
+} from '../../ui/select';
 import { Sofa } from 'lucide-react';
+import { ClassInputProps, FLIGHT_CLASS_LABELS, FlightClassOptions } from "./types";
 
-export function ClassInput({ sheet }: { sheet?: boolean }) {
+
+// Para mostrar en UI, mapeas a labels legibles
+
+
+export function ClassInput({ value, onChange }: ClassInputProps) {
     const { flightClass, setFlightClass } = useSearchFormStore();
     return (
         <Select
-            onValueChange={(selectedValue: FlightClassOptions) => setFlightClass(selectedValue)}
+            onValueChange={(value: FlightClassOptions) => setFlightClass(value)}
         >
             <SelectTrigger className="flex items-center space-x-2 ">
                 <Sofa className="size-5" />
@@ -23,12 +27,11 @@ export function ClassInput({ sheet }: { sheet?: boolean }) {
                 />
             </SelectTrigger>
             <SelectContent>
-                <SelectGroup>
-                    <SelectItem value="Economy"> Economy</SelectItem>
-                    <SelectItem value="Business">Business</SelectItem>
-                    <SelectItem value="First Class">First Class</SelectItem>
-                    {!sheet && <SelectItem value="Any Class">Any Class</SelectItem>}
-                </SelectGroup>
+                {Object.entries(FLIGHT_CLASS_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                        {label}
+                    </SelectItem>
+                ))}
             </SelectContent>
         </Select>
     );

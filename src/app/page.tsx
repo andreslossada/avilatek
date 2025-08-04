@@ -1,7 +1,7 @@
 'use client';
 import Image from "next/image";
 import { useState } from 'react';
-import { FlightSearchForm } from '../components/flights/FlightSearch';
+import { FlightSearchForm } from '../components/flights/FlightSearchForm';
 import { Flight } from '@/types/types';
 import { FlightCard } from '../components/flights/FlightCard';
 import { FlightDetailsSheet } from '@/components/flights/FlightDetailsSheet';
@@ -9,8 +9,6 @@ import { useFlights } from '../hooks/useFlights';
 import { useSearchFormStore } from '@/store/searchFormStore';
 import { CardSkeleton } from '@/components/flights/CardSkeleton';
 import { NUMBER_SKELETONS } from '@/lib/constants';
-import { supabase } from '@/lib/supabase'
-import { useEffect } from "react";
 
 export default function Home() {
     const { filteredFlights, hasSearched } = useSearchFormStore();
@@ -93,7 +91,7 @@ export default function Home() {
                     priority
                 />
             </div>
-            <div className="relative z-10 text-white max-w-4xl  content-end mb-24">
+            <div className="relative z-10 text-white max-w-6xl  content-end mb-24">
                 <div className=" mx-auto mb-0 px-5 ">
                     <h1 className="mb-6 text-4xl md:text-6xl text-shadow-md ">Find Your Perfect Flight</h1>
                     <p className="text-lg md:text-xl text-muted">

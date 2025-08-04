@@ -3,7 +3,13 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Minus, Plus, User } from 'lucide-react';
 
-export function PassengerCounter() {
+
+interface PassengerCounterProps {
+    value: number;
+    onChange: (value: number) => void;
+}
+
+export function PassengerCounter({ value, onChange }: PassengerCounterProps) {
     const { numberOfTravelers, setNumberOfTravelers } = useSearchFormStore();
     const handlePassengerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value);

@@ -61,11 +61,11 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         setIsAlertDialogOpen(true);
     };
     const handleConfirmBooking = () => {
-        alert(`Flight booking to ${flight?.destination} confirmed!`);
+        alert(`Flight booking to ${flight?.destination_airport} confirmed!`);
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
-    let totalPrice = flight ? flight.priceUSD * useSearchFormStore.getState().numberOfTravelers : 0;
+    let totalPrice = flight ? flight.price * useSearchFormStore.getState().numberOfTravelers : 0;
 
     if (hasPets && numberOfPets > 0) {
         totalPrice += (numberOfPets ?? 0) * COST_PER_PET;
@@ -126,7 +126,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                     <Plane />
                                     <h4 className="text-xl font-bold mb-2">
                                         {' '}
-                                        {flight.destination}
+                                        {flight.destination_airport.name} ({flight.destination_airport.iataCode})
                                     </h4>
                                 </div>
                                 <div className="flex gap-2">

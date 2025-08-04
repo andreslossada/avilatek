@@ -1,11 +1,9 @@
-import { FlightCardProps } from '@/types/types';
 
-export function FlightCard({ flight, onSelect }: FlightCardProps) {
+export function FlightCard(flight: any) {
 
     return (
         <li
             className="w-full group flex  cursor-pointer bg-white hover:bg-gray-200 transition-colors duration-200 rounded-md shadow-lg "
-            onClick={() => onSelect(flight)}
         >
             <div className="flex justify-between items-end  flex-grow bg-blac border-r px-6 py-4 group-hover:border-gray-300 ">
                 <div >

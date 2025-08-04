@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
 import { faker } from '@faker-js/faker';
+import airports from 'airport-codes';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
@@ -47,6 +48,7 @@ async function seedDatabase() {
             const departureAirport = faker.airline.airport();
             let destinationAirport = faker.airline.airport();
 
+
             const classOptions = [
                 { type: 'economy', minPrice: 100, maxPrice: 1000 },
                 { type: 'business', minPrice: 1200, maxPrice: 3000 },
@@ -64,6 +66,19 @@ async function seedDatabase() {
                 destinationAirport = faker.airline.airport();
             }
 
+            const destinationCity = airports.findWhere({ iata: destinationAirport.iataCode }).get('city');
+            if (!destinationCity) {
+                console.error(`❌ Error: No se encontró la ciudad para el aeropuerto ${destinationAirport.iataCode}`);
+                process.exit(1);
+            }
+            const departureCity = airports.findWhere({ iata: departureAirport.iataCode }).get('city');
+            if (!departureCity) {
+                console.error(`❌ Error: No se encontró la ciudad para el aeropuerto ${departureAirport.iataCode}`);
+                process.exit(1);
+            }
+
+
+
             const departureTime = faker.date.future({ years: 1 });
             const arrivalTime = faker.date.future({ years: 1, refDate: departureTime });
 
@@ -77,6 +92,8 @@ async function seedDatabase() {
                 airline: faker.airline.airline(),
                 class_type: selectedClass.type,
                 price: generatedPrice,
+                destination_city: destinationCity,
+                departure_city: departureCity,
                 // duration_minutes se puede calcular en la app, o añadir aquí si lo deseas
             });
         }

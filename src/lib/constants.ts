@@ -3,12 +3,7 @@ export const COST_PER_EXTRA_BAG = 50;
 
 export const MAX_TRAVELERS = 10;
 
-export const FLIGHT_CLASSES = [
-    { value: 'economy', label: 'Economy' },
-    { value: 'business', label: 'Business' },
-    { value: 'first', label: 'First Class' },
-    { value: 'any', label: 'Any Class' },
-];
+
 export const DOCUMENT_TYPES = [
     { value: 'dni', label: 'DNI' },
     { value: 'ci', label: 'C.I.' },

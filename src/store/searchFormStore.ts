@@ -3,7 +3,6 @@ import { create } from 'zustand';
 
 // Types
 
-export type FlightClassOptions = 'Economy' | 'Business' | 'First Class' | 'Any Class';
 
 export interface TravelerDetail {
     id: string;
@@ -15,14 +14,14 @@ export interface TravelerDetail {
 
 //FORM
 interface SearchFormState {
-
-    destination: string;
-    departureDate?: Date; 
-    returnDate?: Date; 
-    flightClass: FlightClassOptions; 
+    departureCity: string;
+    destinationCity: string;
+    departureDate?: Date;
+    returnDate?: Date;
+    flightClass: FlightClassOptions;
     numberOfTravelers: number;
 
-    travelerDetails: TravelerDetail[]; 
+    travelerDetails: TravelerDetail[];
 
     hasPets: boolean;
     numberOfPets: number;
@@ -48,7 +47,8 @@ interface SearchFormState {
     setAvailableFlights: (flights: Flight[]) => void;
     setFilteredFlights: (flights: Flight[]) => void;
 
-    setDestination: (destination: string) => void;
+    setDestinationCity: (destination: string) => void;
+    setDepartureCity: (departure: string) => void;
     setDepartureDate: (date?: Date) => void;
     setReturnDate: (date?: Date) => void;
     setFlightClass: (flightClass: FlightClassOptions) => void;
@@ -72,12 +72,13 @@ interface SearchFormState {
 
 // Create store
 export const useSearchFormStore = create<SearchFormState>((set, get) => ({
-    destination: '',
+    departureCity: '',
+    destinationCity: '',
     departureDate: undefined,
     returnDate: undefined,
     flightClass: 'Any Class',
     numberOfTravelers: 1,
-    travelerDetails: [], 
+    travelerDetails: [],
 
     hasPets: false,
     numberOfPets: 0,
@@ -100,27 +101,26 @@ export const useSearchFormStore = create<SearchFormState>((set, get) => ({
 
     setAvailableFlights: (flights) => set({ availableFlights: flights }),
     setFilteredFlights: (flights) => set({ filteredFlights: flights }),
-    setHasSearched: (value: boolean) => set({ hasSearched: value }), 
+    setHasSearched: (value: boolean) => set({ hasSearched: value }),
 
     setIsLoading: (loading) => set({ isLoading: loading }),
     setError: (error) => set({ error }),
 
-    setDestination: (destination) => set({ destination }),
+    setDestinationCity: (destinationCity) => set({ destinationCity }),
+    setDepartureCity: (departureCity) => set({ departureCity }),
     setDepartureDate: (date) => set({ departureDate: date }),
     setReturnDate: (date) => set({ returnDate: date }),
     setFlightClass: (fc) => set({ flightClass: fc }),
     setHasPreferentialSeating: (has) => set({ hasPreferentialSeating: has }),
     setHasInsurance: (has) => set({ hasInsurance: has }),
     setHasSpecialNeeds: (hasNeeds) => set({ hasSpecialNeeds: hasNeeds }),
-    setSpecialAssistanceDescription: (description) => set({ specialAssistanceDescription: description }),
+    setSpecialAssistanceDescription: (description) =>
+        set({ specialAssistanceDescription: description }),
     setDateOfBirth: (date) => set({ dateOfBirth: date }),
 
-
     setNumberOfTravelers: (count) => {
-
         const newCount = Math.max(1, Math.min(10, count));
         set((state) => {
-
             const updatedTravelerDetails = Array.from({ length: newCount }, (_, i) => {
                 return (
                     state.travelerDetails[i] || {
