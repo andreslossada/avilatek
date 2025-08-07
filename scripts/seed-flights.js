@@ -79,8 +79,8 @@ async function seedDatabase() {
 
 
 
-            const departureTime = faker.date.future({ years: 1 });
-            const arrivalTime = faker.date.future({ years: 1, refDate: departureTime });
+            const departureTime = faker.date.soon({ days: 1 });
+            const arrivalTime = faker.date.soon({ days: 1, refDate: departureTime });
 
             flightsToInsert.push({
                 id: faker.string.uuid(),

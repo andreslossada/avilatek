@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState } from 'react';
 import { FlightSearchForm } from '../components/flights/FlightSearchForm';
-import { Flight } from '@/types/types';
+import { Flight } from '@/types/flight';
 import { FlightCard } from '../components/flights/FlightCard';
 import { FlightDetailsSheet } from '@/components/flights/FlightDetailsSheet';
 import { useFlights } from '../hooks/useFlights';
@@ -15,7 +15,6 @@ export default function Home() {
     const { isLoading, error } = useFlights();
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-
 
 
 
@@ -91,7 +90,7 @@ export default function Home() {
                     priority
                 />
             </div>
-            <div className="relative z-10 text-white max-w-6xl  content-end mb-24">
+            <div className="absolute top-1/3 transform  text-white min-w-4/5 content-end mb-24">
                 <div className=" mx-auto mb-0 px-5 ">
                     <h1 className="mb-6 text-4xl md:text-6xl text-shadow-md ">Find Your Perfect Flight</h1>
                     <p className="text-lg md:text-xl text-muted">
@@ -100,10 +99,10 @@ export default function Home() {
                     </p>
                     <p className="text-lg md:text-lg text-muted  mb-8">Your journey starts here.</p>
                 </div>
-                <FlightSearchForm />
-                <div className="absolute w-full">
+                <FlightSearchForm onFlightSelect={handleFlightSelect} />
+                {/* <div className="absolute w-full border">
                     {renderFlightDisplay()}
-                </div>
+                </div> */}
             </div>
             <FlightDetailsSheet
                 isOpen={isSheetOpen}

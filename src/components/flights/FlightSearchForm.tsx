@@ -15,6 +15,7 @@ import { useFlights } from '@/hooks/useFlights';
 import type { CitySelectEvent } from '@/types/ui';
 import type { Flight } from '@/types/flight';
 import { FlightClassOptions } from "./ClassInput/types";
+import { FlightCard } from "./FlightCard";
 
 interface FlightSearchData {
     departureCity: string;
@@ -33,17 +34,15 @@ interface SearchResults {
 }
 
 interface FlightSearchFormProps {
-    onSearchResults?: (results: Flight[]) => void;
-    className?: string;
+    onFlightSelect: (flight: Flight) => void; // Recibe la función para seleccionar vuelo
 }
 
-export function FlightSearchForm({ onSearchResults, className }: FlightSearchFormProps) {
+export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
     // 🎯 Estado del formulario - toda la data de búsqueda
     const [searchData, setSearchData] = useState<FlightSearchData>({
         departureCity: '',
         destinationCity: '',
         departureDate: null,
-        returnDate: null,
         flightClass: 'economy',
         numberOfTravelers: 1,
     });
@@ -55,6 +54,7 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
         error: null,
         hasSearched: false,
     });
+    console.log(`🚀 ~ searchResults:`, searchResults)
 
     // 🔌 Hook para obtener vuelos de la API
     const { fetchFlights } = useFlights();
@@ -168,7 +168,7 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
             }));
 
             // 📤 Notificar al componente padre si existe callback
-            onSearchResults?.(filteredFlights);
+            // onSearchResults?.(filteredFlights);
 
             // 🐛 Log para debugging
             console.log('🚀 Search completed:', {
@@ -190,6 +190,7 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
     };
 
     const showAllFlights = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         setSearchResults(prev => ({
             ...prev,
             isLoading: true,
@@ -199,6 +200,7 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
 
         try {
             const allFlights = await fetchFlights();
+            // console.log(`🚀 ~ allFlights:`, allFlights)
             if (allFlights) {
                 setSearchResults({
                     flights: allFlights,
@@ -206,7 +208,8 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
                     error: null,
                     hasSearched: true,
                 });
-                onSearchResults?.(allFlights);
+                console.log(`🚀 ~ setSearchResults:`, searchResults)
+                // onSearchResults?.(allFlights);
             }
 
         } catch (error) {
@@ -257,8 +260,8 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
 
 
     return (
-        <div className={cn("w-full", className)}>
-            <Card className="w-full mx-auto shadow-lg">
+        <div className={cn("w-full ")}>
+            <Card className="w-full  shadow-lg">
                 <CardContent className="px-6 py-4">
                     <form
                         onSubmit={handleSubmit}
@@ -367,7 +370,7 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
                                 type='submit'
                                 variant='link'
                                 size='default'
-                                className=" absolute right-0 top-10 p-0 m-0 leading-0 text-xs h-auto"
+                                className=" absolute right-0 top-12 p-0 m-0 leading-0 text-xs h-auto"
                                 onClick={showAllFlights}
                             >
                                 All Flights
@@ -391,10 +394,9 @@ export function FlightSearchForm({ onSearchResults, className }: FlightSearchFor
                     </h3>
                     {/* Aquí renderizarías tu componente de lista de vuelos */}
                     <div className="space-y-2">
-                        {searchResults.flights.map((flight, index) => (
-                            <div key={flight.id || index} className="p-4 border rounded-md">
-                                <p>{flight.departure_city} → {flight.destination_city}</p>
-                                {/* Más detalles del vuelo... */}
+                        {searchResults.flights.map((flight) => (
+                            <div key={flight.id} className="w-full">
+                                <FlightCard flight={flight} onSelect={onFlightSelect} />
                             </div>
                         ))}
                     </div>

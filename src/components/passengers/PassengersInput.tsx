@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSearchFormStore, TravelerDetail } from '@/store/searchFormStore';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,44 +14,45 @@ import { DateInput } from '../flights/DateInput';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { DOCUMENT_TYPES } from '@/lib/constants';
-import { Flight } from "@/types/types";
+import { FLIGHT_CLASS_LABELS } from "../flights/ClassInput/types";
+import { Flight } from "@/types/flight";
+import { BookingDetails } from "../flights/FlightDetailsSheet";
 
 interface PassengersInputProps {
     flight?: Flight
 }
 
-export function PassengersInput({ flight }: PassengersInputProps) {
+interface PassengersInputProps {
+    bookingDetails: BookingDetails;
+    setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
+}
+
+export function PassengersInput({ bookingDetails, setBookingDetails }: PassengersInputProps) {
+
     const {
         numberOfTravelers,
         travelerDetails,
-        setTravelerDetails,
         hasPets,
-        setHasPets,
         numberOfPets,
-        setNumberOfPets,
         hasExtraBags,
-        setHasExtraBags,
         numberOfExtraBags,
-        setNumberOfExtraBags,
         hasInsurance,
-        setHasInsurance,
         hasPreferentialSeating,
-        setHasPreferentialSeating,
-        flightClass,
-        specialAssistanceDescription,
         hasSpecialNeeds,
-        setHasSpecialNeeds,
-        setSpecialAssistanceDescription,
-    } = useSearchFormStore();
+        specialAssistanceDescription,
+    } = bookingDetails;
 
     const handleTravelerDetailChange = (
         index: number,
         field: keyof TravelerDetail,
         value: string | Date | undefined,
     ) => {
-        if (field === 'id') return;
+
+        // Create a copy of the travelerDetails array to avoid direct state mutation
 
         const updatedDetails = [...travelerDetails];
+
+        // Ensure the traveler detail exists at the index, if not, create a new one
         if (!updatedDetails[index]) {
             updatedDetails[index] = {
                 id: `traveler-${index + 1}`,
@@ -61,26 +62,35 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                 dateOfBirth: undefined,
             };
         }
-        (updatedDetails[index] as any)[field] = value;
+        // Copia el objeto traveler individual
+        const updatedTraveler = {
+            ...updatedDetails[index],
+            [field]: value,
+        };
+        // Asigna el traveler copiado y actualizado de nuevo al array copiado
+        updatedDetails[index] = updatedTraveler;
 
-        setTravelerDetails(updatedDetails);
+        setBookingDetails(prevDetails => ({
+            ...prevDetails,
+            travelerDetails: updatedDetails,
+        }));
     };
 
     const disableFutureDates = (date: Date) => date > new Date();
 
     return (
-        <div className="space-y-6 mt-5">
-            <div className="flex justify-between items-center">
+        <div className="space-y-6 mt-5 max-w-full ">
+            <div className="flex justify-between items-center ">
                 <p className="flex gap-2 text-base font-medium text-muted-foreground ">
                     <Sofa />
-                    {flight && flight.class}
+                    {/* {flight && FLIGHT_CLASS_LABELS[flight.class_type]} */}
                 </p>
-                <PassengerCounter />
+                {/* <PassengerCounter /> */}
             </div>
 
             {Array.from({ length: numberOfTravelers }).map((_, index) => (
                 <div
-                    key={travelerDetails[index]?.id || `traveler-form-${index}`}
+                    key={`traveler-form-${index}}`}
                     className="border p-4 rounded-md space-y-3 shadow"
                 >
                     <h3 className="text-sm font-semibold">Passenger {index + 1}</h3>
@@ -103,7 +113,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                     <div className="flex gap-2 items-center ">
                         <DateInput
                             selectedDate={travelerDetails[index]?.dateOfBirth}
-                            onDateSelect={(date) =>
+                            onDateSelect={(date: any) =>
                                 handleTravelerDetailChange(index, 'dateOfBirth', date)
                             }
                             placeholderText="Birthdate"
@@ -159,14 +169,17 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                             Pets
                         </Label>
                     </div>
-                    <Switch id="has-pets" checked={hasPets} onCheckedChange={setHasPets} />
+                    <Switch id="has-pets"
+                        checked={hasPets}
+                    //   onCheckedChange={setHasPets} 
+                    />
                     {hasPets && (
                         <Input
                             id="num-pets"
                             type="number"
                             min="0"
                             value={numberOfPets ?? 0}
-                            onChange={(e) => setNumberOfPets(Number(e.target.value))}
+                            // onChange={(e) => setNumberOfPets(Number(e.target.value))}
                             className="w-16 ml-auto"
                         />
                     )}
@@ -182,7 +195,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                     <Switch
                         id="has-extra-bags"
                         checked={hasExtraBags}
-                        onCheckedChange={setHasExtraBags}
+                        // onCheckedChange={setHasExtraBags}
                     />
                     {hasExtraBags && (
                         <Input
@@ -190,7 +203,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                             type="number"
                             min="0"
                             value={numberOfExtraBags ?? 0}
-                            onChange={(e) => setNumberOfExtraBags(Number(e.target.value))}
+                            // onChange={(e) => setNumberOfExtraBags(Number(e.target.value))}
                             className="w-16 ml-auto"
                         />
                     )}
@@ -205,7 +218,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                     <Switch
                         id="has-extra-bags"
                         checked={hasInsurance}
-                        onCheckedChange={setHasInsurance}
+                        // onCheckedChange={setHasInsurance}
                     />
                 </div>
                 <div className="flex items-center justify-start space-x-3  h-6 ">
@@ -218,7 +231,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                     <Switch
                         id="has-extra-bags"
                         checked={hasPreferentialSeating}
-                        onCheckedChange={setHasPreferentialSeating}
+                        // onCheckedChange={setHasPreferentialSeating}
                     />
                 </div>
                 <div className="flex items-center justify-start space-x-3  h-6 ">
@@ -231,7 +244,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                     <Switch
                         id="has-needs"
                         checked={hasSpecialNeeds}
-                        onCheckedChange={setHasSpecialNeeds}
+                        // onCheckedChange={setHasSpecialNeeds}
                     />
                 </div>
                 {hasSpecialNeeds && (
@@ -239,7 +252,7 @@ export function PassengersInput({ flight }: PassengersInputProps) {
                         id="desc-needs"
                         type="text"
                         value={specialAssistanceDescription || ''}
-                        onChange={(e) => setSpecialAssistanceDescription(e.target.value)}
+                        // onChange={(e) => setSpecialAssistanceDescription(e.target.value)}
                         placeholder="Describe your needs"
                         className="w-full"
                         maxLength={200}

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FlightDetailsSheetProps } from '@/types/types';
 import {
     Sheet,
     SheetClose,
@@ -10,29 +9,44 @@ import {
 } from '@/components/ui/sheet';
 import { FlightConfirmationDialog } from './FlightConfirmationDialog';
 import { Button } from '../ui/button';
-import { useSearchFormStore } from '@/store/searchFormStore';
+import { TravelerDetail, useSearchFormStore } from '@/store/searchFormStore';
 import { DateInput } from './DateInput';
 import { PassengersInput } from '../passengers/PassengersInput';
 import { ScrollArea } from '../ui/scroll-area';
 import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
+import { FlightDetailsSheetProps } from "@/types/flight";
 
+export interface BookingDetails {
+    numberOfTravelers: number;
+    travelerDetails: TravelerDetail[];
+    hasPets: boolean;
+    numberOfPets?: number;
+    hasExtraBags: boolean;
+    numberOfExtraBags?: number;
+    hasInsurance: boolean;
+    hasPreferentialSeating: boolean;
+    hasSpecialNeeds: boolean;
+    specialAssistanceDescription: string;
+}
+
+const initialBookingState: BookingDetails = {
+    numberOfTravelers: 1,
+    travelerDetails: [],
+    hasPets: false,
+    numberOfPets: undefined,
+    hasExtraBags: false,
+    numberOfExtraBags: undefined,
+    hasInsurance: false,
+    hasPreferentialSeating: false,
+    hasSpecialNeeds: false,
+    specialAssistanceDescription: '',
+};
 export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
+    const [bookingDetails, setBookingDetails] = useState<BookingDetails>(initialBookingState);
+
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
-    const {
-        returnDate,
-        departureDate,
-        setDepartureDate,
-        setReturnDate,
-        numberOfTravelers,
-        hasPets,
-        numberOfPets,
-        hasExtraBags,
-        numberOfExtraBags,
-        travelerDetails,
-        hasSpecialNeeds,
-        specialAssistanceDescription,
-    } = useSearchFormStore();
+
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
     const disableDepartureDates = (date: Date) => {
         //Disable past dates
@@ -40,9 +54,9 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
             return true;
         }
         //If returnDate is selected, disable any departure date after returnDate
-        if (returnDate && date > returnDate) {
-            return true;
-        }
+        // if (returnDate && date > returnDate) {
+        //     return true;
+        // }
         return false;
     };
     const disableReturnDates = (date: Date) => {
@@ -67,27 +81,28 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     };
     let totalPrice = flight ? flight.price * useSearchFormStore.getState().numberOfTravelers : 0;
 
-    if (hasPets && numberOfPets > 0) {
-        totalPrice += (numberOfPets ?? 0) * COST_PER_PET;
+    if (bookingDetails.hasPets && bookingDetails.numberOfPets > 0) {
+        totalPrice += (bookingDetails.numberOfPets ?? 0) * COST_PER_PET;
     }
 
-    if (hasExtraBags && numberOfExtraBags > 0) {
-        totalPrice += (numberOfExtraBags ?? 0) * COST_PER_EXTRA_BAG;
+    if (bookingDetails.hasExtraBags && bookingDetails.numberOfExtraBags > 0) {
+        totalPrice += (bookingDetails.numberOfExtraBags ?? 0) * COST_PER_EXTRA_BAG;
     }
 
     const areAllEssentialFieldsFilled = () => {
         //Validate departure and return dates
-        if (!departureDate || !returnDate) {
-            return false;
-        }
+        // if (!departureDate || !returnDate) {
+        //     return false;
+        // }
 
         //Validate the travelerDetails array has the same number of items as numberOfTravelers
-        if (travelerDetails.length !== numberOfTravelers) {
+        console.log(`🚀 ~ travelerDetails:`, bookingDetails.travelerDetails)
+        if (bookingDetails.travelerDetails.length !== bookingDetails.numberOfTravelers) {
             return false;
         }
 
-        for (let i = 0; i < numberOfTravelers; i++) {
-            const traveler = travelerDetails[i];
+        for (let i = 0; i < bookingDetails.numberOfTravelers; i++) {
+            const traveler = bookingDetails.travelerDetails[i];
             if (
                 !traveler ||
                 !traveler.fullName ||
@@ -98,13 +113,13 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                 return false;
             }
         }
-        if (hasPets && (numberOfPets === undefined || numberOfPets <= 0)) {
+        if (bookingDetails.hasPets && (bookingDetails.numberOfPets === undefined || bookingDetails.numberOfPets <= 0)) {
             return false;
         }
-        if (hasExtraBags && (numberOfExtraBags === undefined || numberOfExtraBags <= 0)) {
+        if (bookingDetails.hasExtraBags && (bookingDetails.numberOfExtraBags === undefined || bookingDetails.numberOfExtraBags <= 0)) {
             return false;
         }
-        if (hasSpecialNeeds && !specialAssistanceDescription) {
+        if (bookingDetails.hasSpecialNeeds && !bookingDetails.specialAssistanceDescription) {
             return false;
         }
 
@@ -114,43 +129,34 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     return (
         <>
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="right" className="px-4 bg-gray-100 w-[90vw]">
+                <SheetContent side="right" className="px-4 bg-gray-100 ">
                     <SheetHeader className="px-0 pb-0">
                         <SheetTitle>Flight Details</SheetTitle>
                     </SheetHeader>
 
-                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm">
+                    <ScrollArea className="flex-1 border rounded-md bg-white overflow-y-scroll inset-shadow-sm p-4">
                         {flight ? (
-                            <div className="p-4 text-gray-900">
-                                <div className="flex items-center gap-3 mb-1">
-                                    <Plane />
-                                    <h4 className="text-xl font-bold mb-2">
-                                        {' '}
-                                        {flight.destination_airport.name} ({flight.destination_airport.iataCode})
-                                    </h4>
-                                </div>
-                                <div className="flex gap-2">
-                                    <div className="flex w-full space-x-1 items-center">
+                            <div className=" text-gray-900 ">
+                                <h4 className="flex text-xl  font-bold mb-4 w-full  leading-none gap-3 text-gray-600">
+                                    {flight.departure_city}
+                                    <Plane className="min-w-1 rotate-45" />
+                                    {flight.destination_city}
+                                </h4>
+                                <div className="flex gap-2  items-center">
                                         <CornerUpRight />
-                                        <DateInput
-                                            selectedDate={departureDate}
-                                            onDateSelect={setDepartureDate}
+                                    <DateInput
+                                        // selectedDate={departureDate}
+                                        // onDateSelect={setDepartureDate}
                                             placeholderText="Departure"
                                             disabledPredicate={disableDepartureDates}
                                         />
-                                    </div>
 
-                                    <div className="flex w-full space-x-1 items-center">
-                                        <CornerUpLeft />
-                                        <DateInput
-                                            selectedDate={returnDate}
-                                            onDateSelect={setReturnDate}
-                                            placeholderText="Return"
-                                            disabledPredicate={disableReturnDates}
-                                        />
-                                    </div>
+
                                 </div>
-                                <PassengersInput flight={flight} />
+                                <PassengersInput
+                                    bookingDetails={bookingDetails}
+                                    setBookingDetails={setBookingDetails}
+                                />
                             </div>
                         ) : (
                             <p className="p-4 text-gray-900">Select a flight to see its details.</p>

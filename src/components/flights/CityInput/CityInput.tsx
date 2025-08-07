@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDownIcon } from "lucide-react";
+import { Check, ChevronsUpDownIcon, MapPin } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useCitySearch } from '@/hooks/useCitySearch';
 import type { CityInputProps } from './types';
@@ -42,8 +42,9 @@ export function CityInput({
                     disabled={disabled}
                     className={cn("w-full justify-between", !displayValue && "text-muted-foreground", className)}
                 >
+                    <MapPin />
                     {buttonText}
-                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDownIcon className=" h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
