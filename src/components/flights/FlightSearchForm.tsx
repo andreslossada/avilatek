@@ -54,7 +54,6 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
         error: null,
         hasSearched: false,
     });
-    console.log(`🚀 ~ searchResults:`, searchResults)
 
     // 🔌 Hook para obtener vuelos de la API
     const { fetchFlights } = useFlights();
@@ -171,11 +170,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
             // onSearchResults?.(filteredFlights);
 
             // 🐛 Log para debugging
-            console.log('🚀 Search completed:', {
-                criteria: searchData,
-                totalFlights: allFlights.length,
-                matchingFlights: filteredFlights.length,
-            });
+
 
         } catch (error) {
             // 💥 Manejo de errores
@@ -200,7 +195,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
 
         try {
             const allFlights = await fetchFlights();
-            // console.log(`🚀 ~ allFlights:`, allFlights)
+
             if (allFlights) {
                 setSearchResults({
                     flights: allFlights,
@@ -208,8 +203,8 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
                     error: null,
                     hasSearched: true,
                 });
-                console.log(`🚀 ~ setSearchResults:`, searchResults)
                 // onSearchResults?.(allFlights);
+
             }
 
         } catch (error) {

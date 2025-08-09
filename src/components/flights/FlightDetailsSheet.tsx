@@ -96,7 +96,6 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         // }
 
         //Validate the travelerDetails array has the same number of items as numberOfTravelers
-        console.log(`🚀 ~ travelerDetails:`, bookingDetails.travelerDetails)
         if (bookingDetails.travelerDetails.length !== bookingDetails.numberOfTravelers) {
             return false;
         }

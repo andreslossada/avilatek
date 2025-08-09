@@ -2,33 +2,46 @@ import { useSearchFormStore } from '@/store/searchFormStore';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Minus, Plus, User } from 'lucide-react';
+import { BookingDetails } from "../flights/FlightDetailsSheet";
 
 
 interface PassengerCounterProps {
-    value: number;
-    onChange: (value: number) => void;
+    numberOfPassengers: number;
+    setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
 }
+export function PassengerCounter({ numberOfPassengers, setBookingDetails }: PassengerCounterProps) {
 
-export function PassengerCounter({ value, onChange }: PassengerCounterProps) {
-    const { numberOfTravelers, setNumberOfTravelers } = useSearchFormStore();
+
     const handlePassengerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value);
 
         if (!isNaN(value) && value >= 1 && value <= 10) {
-            setNumberOfTravelers(value);
+            setBookingDetails((prevDetails: BookingDetails) => ({
+                ...prevDetails,
+                numberOfTravelers: value
+            }));
         } else if (e.target.value === '') {
-            setNumberOfTravelers(1);
+            setBookingDetails(prevDetails => ({
+                ...prevDetails,
+                numberOfTravelers: 1
+            }));
         }
     };
     const incrementPassengers = () => {
-        if (numberOfTravelers < 10) {
-            setNumberOfTravelers(numberOfTravelers + 1);
+        if (numberOfPassengers < 10) {
+            setBookingDetails(prevDetails => ({
+                ...prevDetails,
+                numberOfTravelers: numberOfPassengers + 1
+            }));
         }
     };
 
     const decrementPassengers = () => {
-        if (numberOfTravelers > 1) {
-            setNumberOfTravelers(numberOfTravelers - 1);
+        if (numberOfPassengers > 1) {
+            setBookingDetails(prevDetails => ({
+                ...prevDetails,
+                numberOfTravelers: numberOfPassengers - 1
+            }));
         }
     };
     return (
@@ -41,13 +54,13 @@ export function PassengerCounter({ value, onChange }: PassengerCounterProps) {
                     size="icon"
                     className="h-9 w-9 shrink-0"
                     onClick={decrementPassengers}
-                    disabled={numberOfTravelers <= 1}
+                    disabled={numberOfPassengers <= 1}
                 >
                     <Minus className="h-4 w-4" />
                 </Button>
                 <Input
                     type="number"
-                    value={numberOfTravelers}
+                    value={numberOfPassengers}
                     onChange={handlePassengerInputChange}
                     min="1"
                     max="10"
@@ -59,7 +72,7 @@ export function PassengerCounter({ value, onChange }: PassengerCounterProps) {
                     size="icon"
                     className="h-9 w-9 shrink-0"
                     onClick={incrementPassengers}
-                    disabled={numberOfTravelers >= 10}
+                    disabled={numberOfPassengers >= 10}
                 >
                     <Plus className="h-4 w-4" />
                 </Button>

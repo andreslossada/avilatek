@@ -4,6 +4,14 @@ import { Calendar as CalendarComponent } from '../ui/calendar';
 import { cn, formatDate } from '@/lib/utils';
 import { useState } from 'react';
 
+export interface DateInputProps {
+    selectedDate: Date | undefined;
+    onDateSelect: (date?: Date) => void;
+    placeholderText?: string;
+    disabledPredicate?: (date: Date) => boolean;
+    calendarCaptionLayout?: 'dropdown' | 'buttons';
+}
+
 export function DateInput({
     selectedDate,
     onDateSelect,

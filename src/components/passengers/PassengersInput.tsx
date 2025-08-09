@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { faker } from '@faker-js/faker';
 import { useSearchFormStore, TravelerDetail } from '@/store/searchFormStore';
 import { Input } from '@/components/ui/input';
 import {
@@ -9,7 +10,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { PassengerCounter } from './PassengerCounter';
-import { ContactRound, IdCard, PawPrint, Briefcase, Shield, Crown, Sofa, Hospital } from 'lucide-react';
+import { ContactRound, IdCard, PawPrint, Briefcase, Shield, Crown, Sofa, Hospital, Undo2, Dices } from 'lucide-react';
 import { DateInput } from '../flights/DateInput';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -17,6 +18,7 @@ import { DOCUMENT_TYPES } from '@/lib/constants';
 import { FLIGHT_CLASS_LABELS } from "../flights/ClassInput/types";
 import { Flight } from "@/types/flight";
 import { BookingDetails } from "../flights/FlightDetailsSheet";
+import { Button } from "../ui/button";
 
 interface PassengersInputProps {
     flight?: Flight
@@ -78,6 +80,60 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
 
     const disableFutureDates = (date: Date) => date > new Date();
 
+    const handleRandomizeTravelerDetails = (index: number) => {
+        const randomDocumentTypes = DOCUMENT_TYPES.map(type => type.value);
+
+        setBookingDetails(prevDetails => {
+            // Copia el array de viajeros para mantener la inmutabilidad
+            const updatedTravelers = [...prevDetails.travelerDetails];
+
+            // Crea un nuevo objeto de viajero con datos aleatorios
+            const newRandomTraveler = {
+                id: updatedTravelers[index]?.id || `traveler-${index + 1}`,
+                fullName: faker.person.fullName(),
+                documentType: randomDocumentTypes[Math.floor(Math.random() * randomDocumentTypes.length)],
+                documentNumber: faker.string.numeric(8),
+                dateOfBirth: faker.date.birthdate(),
+            };
+
+            // Reemplaza el viajero en el índice específico con el nuevo viajero aleatorio
+            updatedTravelers[index] = newRandomTraveler;
+
+            // Devuelve el nuevo estado con el array de viajeros actualizado
+            return {
+                ...prevDetails,
+                travelerDetails: updatedTravelers,
+            };
+        });
+
+
+    };
+
+    const handleDeleteTravelerDetail = (index: number) => {
+        setBookingDetails(prevDetails => {
+            // Copia el array de viajeros para mantener la inmutabilidad
+            const updatedTravelers = [...prevDetails.travelerDetails];
+
+            // Crea un nuevo objeto de viajero con campos vacíos, manteniendo el ID
+            const clearedTraveler = {
+                id: updatedTravelers[index]?.id || `traveler-${index + 1}`,
+                fullName: '',
+                documentType: '',
+                documentNumber: '',
+                dateOfBirth: undefined,
+            };
+
+            // Reemplaza el viajero en el índice específico con el objeto limpio
+            updatedTravelers[index] = clearedTraveler;
+
+            // Devuelve el nuevo estado con el array de viajeros actualizado
+            return {
+                ...prevDetails,
+                travelerDetails: updatedTravelers,
+            };
+        });
+    };
+
     return (
         <div className="space-y-6 mt-5 max-w-full ">
             <div className="flex justify-between items-center ">
@@ -85,7 +141,7 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     <Sofa />
                     {/* {flight && FLIGHT_CLASS_LABELS[flight.class_type]} */}
                 </p>
-                {/* <PassengerCounter /> */}
+                <PassengerCounter numberOfPassengers={numberOfTravelers} setBookingDetails={setBookingDetails} />
             </div>
 
             {Array.from({ length: numberOfTravelers }).map((_, index) => (
@@ -93,7 +149,21 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     key={`traveler-form-${index}}`}
                     className="border p-4 rounded-md space-y-3 shadow"
                 >
+                    <header className="flex items-center justify-between ">
                     <h3 className="text-sm font-semibold">Passenger {index + 1}</h3>
+                        <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="icon" className="cursor-pointer"
+                                onClick={() => handleRandomizeTravelerDetails(index)}
+                            >
+                                <Dices className="size-6 text-muted-foreground "
+                                />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="cursor-pointer"
+                                onClick={() => handleDeleteTravelerDetail(index)}>
+                                <Undo2 className="size-6 text-muted-foreground cursor-pointer" />
+                            </Button>
+                        </div>
+                    </header>
 
                     {/* Name */}
                     <div className="flex gap-2 items-center">
