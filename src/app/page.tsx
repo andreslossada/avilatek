@@ -6,12 +6,10 @@ import { Flight } from '@/types/flight';
 import { FlightCard } from '../components/flights/FlightCard';
 import { FlightDetailsSheet } from '@/components/flights/FlightDetailsSheet';
 import { useFlights } from '../hooks/useFlights';
-import { useSearchFormStore } from '@/store/searchFormStore';
 import { CardSkeleton } from '@/components/flights/CardSkeleton';
 import { NUMBER_SKELETONS } from '@/lib/constants';
 
 export default function Home() {
-    const { filteredFlights, hasSearched } = useSearchFormStore();
     const { isLoading, error } = useFlights();
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
@@ -23,61 +21,6 @@ export default function Home() {
         setIsSheetOpen(true);
     };
 
-    const renderFlightDisplay = () => {
-        if (isLoading && hasSearched) {
-            return (
-                <div className="mt-8 p-4 border bg-opacity-90 rounded-lg shadow-lg text-gray-900">
-                    <h2 className="text-lg font-semibold text-muted-foreground mb-4 p-4">
-                        Searching...
-                    </h2>
-                    <ul className="space-y-4">
-                        {Array.from({ length: NUMBER_SKELETONS }).map((_, index) => (
-                            <li key={index}>
-                                <CardSkeleton />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            );
-        }
-
-        if (!isLoading && hasSearched && filteredFlights.length > 0) {
-            return (
-                <div className="mt-8   bg-opacity-90 rounded-lg  ">
-                    <h2 className="text-lg font-bold  px-4 text-shadow-md pb-4">Found ({filteredFlights.length}):</h2>
-                    <ul className="space-y-4">
-                        {filteredFlights.map((flight, index) => (
-                            <FlightCard
-                                key={`${index}-${flight.departure_airport.name}-${flight.departureDate}-${flight.price}`}
-                                flight={flight}
-                                onSelect={handleFlightSelect}
-                            />
-                        ))}
-                    </ul>
-                </div>
-            );
-        }
-
-        if (!isLoading && hasSearched && filteredFlights.length === 0) {
-            return (
-                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900 text-center">
-                    <p className="text-gray-600 text-center">Try looking for another city :( </p>
-                    <span className="text-[11px] text-muted-foreground">
-                        (New York, Madrid or Buenos aires)
-                    </span>
-                </div>
-            );
-        }
-
-        if (error && hasSearched) {
-            return (
-                <div className="mt-8 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-900">
-                    <p className="text-red-600 text-center">Error: {error}</p>
-                </div>
-            );
-        }
-        return null;
-    };
 
     return (
         <section className="relative font-sans grid md:items-center items-baseline p-0 justify-items-center min-h-screen  ">

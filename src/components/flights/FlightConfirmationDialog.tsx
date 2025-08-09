@@ -9,12 +9,18 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useSearchFormStore } from '@/store/searchFormStore';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { Check, Package, Plane, Users } from 'lucide-react';
 import { calculateAge } from "@/lib/utils";
+
+export interface FlightConfirmationDialogProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    flight?: { priceUSD: number; destination: string };
+    onConfirm: () => void;
+}
 
 export function FlightConfirmationDialog({
     isOpen,
@@ -22,31 +28,16 @@ export function FlightConfirmationDialog({
     flight,
     onConfirm,
 }: FlightConfirmationDialogProps) {
-    const {
-        departureDate,
-        returnDate,
-        flightClass,
-        numberOfTravelers,
-        travelerDetails,
-        hasPets,
-        numberOfPets,
-        hasExtraBags,
-        numberOfExtraBags,
-        hasInsurance,
-        hasPreferentialSeating,
-        hasSpecialNeeds,
-        specialAssistanceDescription,
-    } = useSearchFormStore();
 
-    let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
+    // let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
 
-    if (hasPets && numberOfPets > 0) {
-        totalPrice += numberOfPets * COST_PER_PET;
-    }
+    // if (hasPets && numberOfPets > 0) {
+    //     totalPrice += numberOfPets * COST_PER_PET;
+    // }
 
-    if (hasExtraBags && numberOfExtraBags > 0) {
-        totalPrice += numberOfExtraBags * COST_PER_EXTRA_BAG;
-    }
+    // if (hasExtraBags && numberOfExtraBags > 0) {
+    //     totalPrice += numberOfExtraBags * COST_PER_EXTRA_BAG;
+    // }
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -59,7 +50,7 @@ export function FlightConfirmationDialog({
 
                 <article className="space-y-2 text-gray-800">
                     {/* --- Details --- */}
-                    {flight && (
+                    {/* {flight && (
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
                                 <Plane className="text-muted-foreground" />
@@ -90,7 +81,7 @@ export function FlightConfirmationDialog({
                                 <strong>Passengers:</strong> {numberOfTravelers}
                             </div>
                         </div>
-                    )}
+                    )} */}
 
                     <div className="border-t pt-4">
                         <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
@@ -98,7 +89,7 @@ export function FlightConfirmationDialog({
                             Passengers Details
                         </h3>
                         <ScrollArea className="max-h-60 overflow-y-scroll border rounded-lg ring-1 ring-muted-foreground p-2">
-                            {travelerDetails.slice(0, numberOfTravelers).map((traveler, index) => (
+                            {/* {travelerDetails.slice(0, numberOfTravelers).map((traveler, index) => (
                                 <div
                                     key={traveler.id}
                                     className="mb-3 p-3 border rounded-md bg-gray-50 shadow-sm"
@@ -125,11 +116,11 @@ export function FlightConfirmationDialog({
                                         </p>
                                     )}
                                 </div>
-                            ))}
+                            ))} */}
                         </ScrollArea>
                     </div>
 
-                    {(hasPets || hasExtraBags || hasInsurance || hasPreferentialSeating) && (
+                    {/* {(hasPets || hasExtraBags || hasInsurance || hasPreferentialSeating) && (
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
                                 <Package className="text-muted-foreground" />
@@ -167,11 +158,11 @@ export function FlightConfirmationDialog({
                                 </p>
                             )}
                         </div>
-                    )}
+                    )} */}
 
                     {/* --- Total --- */}
                     <p className="text-2xl font-bold mt-6 ">
-                        Total: <span className="text-green-900">${totalPrice.toFixed(2)} USD</span>
+                        {/* Total: <span className="text-green-900">${totalPrice.toFixed(2)} USD</span> */}
                     </p>
                 </article>
 

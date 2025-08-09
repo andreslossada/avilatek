@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { faker } from '@faker-js/faker';
-import { useSearchFormStore, TravelerDetail } from '@/store/searchFormStore';
 import { Input } from '@/components/ui/input';
 import {
     Select,
@@ -17,14 +16,11 @@ import { Label } from '@/components/ui/label';
 import { DOCUMENT_TYPES } from '@/lib/constants';
 import { FLIGHT_CLASS_LABELS } from "../flights/ClassInput/types";
 import { Flight } from "@/types/flight";
-import { BookingDetails } from "../flights/FlightDetailsSheet";
+import { BookingDetails, TravelerDetail } from "../flights/FlightDetailsSheet";
 import { Button } from "../ui/button";
 
 interface PassengersInputProps {
-    flight?: Flight
-}
-
-interface PassengersInputProps {
+    flight?: Flight;
     bookingDetails: BookingDetails;
     setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
 }
@@ -134,6 +130,13 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
         });
     };
 
+    const handlePassengerCountChange = (count: number) => {
+        setBookingDetails(prevDetails => ({
+            ...prevDetails,
+            numberOfTravelers: count,
+        }));
+    };
+
     return (
         <div className="space-y-6 mt-5 max-w-full ">
             <div className="flex justify-between items-center ">
@@ -141,7 +144,7 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     <Sofa />
                     {/* {flight && FLIGHT_CLASS_LABELS[flight.class_type]} */}
                 </p>
-                <PassengerCounter numberOfPassengers={numberOfTravelers} setBookingDetails={setBookingDetails} />
+                <PassengerCounter numberOfPassengers={numberOfTravelers} onCountChange={handlePassengerCountChange} />
             </div>
 
             {Array.from({ length: numberOfTravelers }).map((_, index) => (

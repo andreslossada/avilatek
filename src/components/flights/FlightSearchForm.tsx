@@ -329,8 +329,8 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto py-4 px-4 grid gap-2" align="start">
                                     <PassengerCounter
-                                        value={searchData.numberOfTravelers}
-                                        onChange={handlePassengersChange}
+                                        numberOfPassengers={searchData.numberOfTravelers}
+                                        onCountChange={handlePassengersChange}
                                     />
                                     <ClassInput
                                         value={searchData.flightClass}

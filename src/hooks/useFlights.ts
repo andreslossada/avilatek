@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { UseFlightsResult } from '@/types/hooks';
 import { FETCH_DELAY, FLIGHT_API_URL } from '@/lib/constants';
-import { useSearchFormStore } from '@/store/searchFormStore';
 import {supabase} from '@/lib/supabase';
 import { Flight } from '@/types/flight';
 
@@ -10,7 +9,6 @@ export function useFlights(): UseFlightsResult {
     const [error, setError] = useState<string | null>(null);
     const [availableFlights, setAvailableFlights] = useState<Flight[]>([]);
 
-    // const setAvailableFlights = useSearchFormStore((state) => state.setAvailableFlights);
 
     const fetchFlights = useCallback(async () => {
         setIsLoading(true);

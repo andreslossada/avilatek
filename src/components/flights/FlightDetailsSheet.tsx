@@ -9,13 +9,21 @@ import {
 } from '@/components/ui/sheet';
 import { FlightConfirmationDialog } from './FlightConfirmationDialog';
 import { Button } from '../ui/button';
-import { TravelerDetail, useSearchFormStore } from '@/store/searchFormStore';
 import { DateInput } from './DateInput';
 import { PassengersInput } from '../passengers/PassengersInput';
 import { ScrollArea } from '../ui/scroll-area';
 import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { FlightDetailsSheetProps } from "@/types/flight";
+
+
+export interface TravelerDetail {
+    id: string;
+    fullName: string;
+    documentType: string;
+    documentNumber: string;
+    dateOfBirth?: Date;
+}
 
 export interface BookingDetails {
     numberOfTravelers: number;
@@ -59,17 +67,17 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         // }
         return false;
     };
-    const disableReturnDates = (date: Date) => {
-        //Disable past dates
-        if (disablePastDates(date)) {
-            return true;
-        }
-        //If departureDate is selected, disable any return dates prior to departureDate
-        if (departureDate && date < departureDate) {
-            return true;
-        }
-        return false;
-    };
+    // const disableReturnDates = (date: Date) => {
+    //     //Disable past dates
+    //     if (disablePastDates(date)) {
+    //         return true;
+    //     }
+    //     //If departureDate is selected, disable any return dates prior to departureDate
+    //     if (departureDate && date < departureDate) {
+    //         return true;
+    //     }
+    //     return false;
+    // };
 
     const handleSelectFlight = () => {
         setIsAlertDialogOpen(true);
@@ -79,15 +87,14 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         setIsAlertDialogOpen(false);
         onOpenChange(false);
     };
-    let totalPrice = flight ? flight.price * useSearchFormStore.getState().numberOfTravelers : 0;
 
-    if (bookingDetails.hasPets && bookingDetails.numberOfPets > 0) {
-        totalPrice += (bookingDetails.numberOfPets ?? 0) * COST_PER_PET;
-    }
+    // if (bookingDetails.hasPets && bookingDetails.numberOfPets > 0) {
+    //     totalPrice += (bookingDetails.numberOfPets ?? 0) * COST_PER_PET;
+    // }
 
-    if (bookingDetails.hasExtraBags && bookingDetails.numberOfExtraBags > 0) {
-        totalPrice += (bookingDetails.numberOfExtraBags ?? 0) * COST_PER_EXTRA_BAG;
-    }
+    // if (bookingDetails.hasExtraBags && bookingDetails.numberOfExtraBags > 0) {
+    //     totalPrice += (bookingDetails.numberOfExtraBags ?? 0) * COST_PER_EXTRA_BAG;
+    // }
 
     const areAllEssentialFieldsFilled = () => {
         //Validate departure and return dates
@@ -143,12 +150,12 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                 </h4>
                                 <div className="flex gap-2  items-center">
                                         <CornerUpRight />
-                                    <DateInput
+                                    {/* <DateInput
                                         // selectedDate={departureDate}
                                         // onDateSelect={setDepartureDate}
                                             placeholderText="Departure"
                                             disabledPredicate={disableDepartureDates}
-                                        />
+                                        /> */}
 
 
                                 </div>
@@ -164,7 +171,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
 
                     <SheetFooter className="px-0 pt-0">
                         <p className="text-2xl font-bold my-1 text-green-900 ml-auto">
-                            Total: ${totalPrice}
+                            {/* Total: ${totalPrice} */}
                         </p>
                         <Button
                             onClick={handleSelectFlight}
@@ -181,7 +188,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
             <FlightConfirmationDialog
                 isOpen={isAlertDialogOpen}
                 onOpenChange={setIsAlertDialogOpen}
-                flight={flight}
+                // flight={flight}
                 onConfirm={handleConfirmBooking}
             />
         </>

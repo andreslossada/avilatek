@@ -1,4 +1,3 @@
-import { useSearchFormStore } from '@/store/searchFormStore';
 import {
     Select,
     SelectContent,
@@ -15,15 +14,14 @@ import { ClassInputProps, FLIGHT_CLASS_LABELS, FlightClassOptions } from "./type
 
 
 export function ClassInput({ value, onChange }: ClassInputProps) {
-    const { flightClass, setFlightClass } = useSearchFormStore();
     return (
         <Select
-            onValueChange={(value: FlightClassOptions) => setFlightClass(value)}
+            onValueChange={(value: FlightClassOptions) => onChange(value)}
         >
             <SelectTrigger className="flex items-center space-x-2 ">
                 <Sofa className="size-5" />
                 <SelectValue
-                    placeholder={flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
+                    // placeholder={flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
                 />
             </SelectTrigger>
             <SelectContent>
