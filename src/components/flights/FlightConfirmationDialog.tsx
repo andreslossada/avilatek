@@ -1,5 +1,4 @@
 import React from 'react';
-import { FlightConfirmationDialogProps } from '@/types/types';
 import {
     AlertDialog,
     AlertDialogAction,

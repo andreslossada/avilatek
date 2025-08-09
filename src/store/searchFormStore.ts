@@ -1,8 +1,6 @@
-import { Flight } from '@/types/types';
 import { create } from 'zustand';
 
 // Types
-
 
 export interface TravelerDetail {
     id: string;
