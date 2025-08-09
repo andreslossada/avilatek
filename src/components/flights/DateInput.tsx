@@ -9,7 +9,7 @@ export interface DateInputProps {
     onDateSelect: (date?: Date) => void;
     placeholderText?: string;
     disabledPredicate?: (date: Date) => boolean;
-    calendarCaptionLayout?: 'dropdown' | 'buttons';
+    calendarCaptionLayout?: "label" | "dropdown" | "dropdown-months" | "dropdown-years";
 }
 
 export function DateInput({
