@@ -52,6 +52,17 @@ export default function Home() {
         }
     };
 
+    const handleConfirmBooking = () => {
+        // ✨ Aquí va la lógica para enviar la reserva a una API
+        console.log('Booking confirmed with details:', bookingDetails);
+
+        // Si la confirmación fue exitosa...
+        alert('Booking confirmed!');
+
+        // Resetear el estado para una nueva reserva
+        setBookingDetails(initialBookingState);
+    };
+
 
     return (
         <section className="relative font-sans grid md:items-center items-baseline p-0 justify-items-center min-h-screen  ">
@@ -83,6 +94,7 @@ export default function Home() {
                 onOpenChange={handleCloseSheet}
                 bookingDetails={bookingDetails} // ✨ Pasa el objeto completo
                 setBookingDetails={setBookingDetails} // ✨ Pasa el setter para que el hijo lo use
+                onConfirmBooking={handleConfirmBooking} 
             />
         </section>
     );

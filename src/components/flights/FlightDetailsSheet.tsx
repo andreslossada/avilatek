@@ -30,9 +30,10 @@ interface FlightDetailsSheetProps {
     onOpenChange: (isOpen: boolean) => void;
     bookingDetails: BookingDetails;
     setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
+    onConfirmBooking: () => void;
 }
 
-export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBookingDetails }: FlightDetailsSheetProps) {
+export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBookingDetails, onConfirmBooking }: FlightDetailsSheetProps) {
 
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
     const flight = bookingDetails.flight;
@@ -187,12 +188,12 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBo
                     </SheetFooter>
                 </SheetContent>
             </Sheet>
-            {/* <FlightConfirmationDialog
+            <FlightConfirmationDialog
                 isOpen={isAlertDialogOpen}
                 onOpenChange={setIsAlertDialogOpen}
-                // flight={flight}
-                // onConfirm={handleConfirmBooking}
-            /> */}
+                bookingDetails={bookingDetails}
+                onConfirm={onConfirmBooking}
+            />
         </>
     );
 }

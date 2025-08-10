@@ -14,21 +14,32 @@ import { ScrollArea } from '../ui/scroll-area';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { Check, Package, Plane, Users } from 'lucide-react';
 import { calculateAge } from "@/lib/utils";
+import { BookingDetails } from "@/app/page";
 
 export interface FlightConfirmationDialogProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    flight?: { priceUSD: number; destination: string };
+    bookingDetails: BookingDetails,
     onConfirm: () => void;
 }
 
 export function FlightConfirmationDialog({
     isOpen,
     onOpenChange,
-    flight,
+    bookingDetails,
     onConfirm,
 }: FlightConfirmationDialogProps) {
-
+    const { flight,
+        numberOfTravelers,
+        travelerDetails,
+        hasPets,
+        numberOfPets,
+        hasExtraBags,
+        numberOfExtraBags,
+        hasInsurance,
+        hasPreferentialSeating,
+        hasSpecialNeeds,
+        specialAssistanceDescription, } = bookingDetails
     // let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
 
     // if (hasPets && numberOfPets > 0) {
@@ -50,38 +61,36 @@ export function FlightConfirmationDialog({
 
                 <article className="space-y-2 text-gray-800">
                     {/* --- Details --- */}
-                    {/* {flight && (
+                    {flight && (
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
                                 <Plane className="text-muted-foreground" />
                                 Flight Details
                             </h3>
                             <div>
-                                <strong>Destination:</strong> {flight.destination}
+                                <strong>Departure:</strong> {flight.departure_city}
+                            </div>
+                            <div>
+                                <strong>Destination:</strong> {flight.destination_city}
                             </div>
 
                             <div>
                                 <strong>Departure:</strong>{' '}
-                                {departureDate
-                                    ? new Date(departureDate).toLocaleDateString()
-                                    : 'Not specified'}
-                            </div>
-                            <div>
-                                <strong>Return:</strong>{' '}
-                                {returnDate
-                                    ? new Date(returnDate).toLocaleDateString()
+                                {flight.departure_at
+                                    ? new Date(flight.departure_at).toLocaleDateString()
                                     : 'Not specified'}
                             </div>
 
+
                             <div>
                                 <strong>Clase:</strong>{' '}
-                                {flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
+                                {flight.class_type.charAt(0).toUpperCase() + flight.class_type.slice(1)}
                             </div>
                             <div>
                                 <strong>Passengers:</strong> {numberOfTravelers}
                             </div>
                         </div>
-                    )} */}
+                    )}
 
                     <div className="border-t pt-4">
                         <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
@@ -89,7 +98,7 @@ export function FlightConfirmationDialog({
                             Passengers Details
                         </h3>
                         <ScrollArea className="max-h-60 overflow-y-scroll border rounded-lg ring-1 ring-muted-foreground p-2">
-                            {/* {travelerDetails.slice(0, numberOfTravelers).map((traveler, index) => (
+                            {travelerDetails.slice(0, numberOfTravelers).map((traveler, index) => (
                                 <div
                                     key={traveler.id}
                                     className="mb-3 p-3 border rounded-md bg-gray-50 shadow-sm"
@@ -116,11 +125,11 @@ export function FlightConfirmationDialog({
                                         </p>
                                     )}
                                 </div>
-                            ))} */}
+                            ))} 
                         </ScrollArea>
                     </div>
 
-                    {/* {(hasPets || hasExtraBags || hasInsurance || hasPreferentialSeating) && (
+                    {(hasPets || hasExtraBags || hasInsurance || hasPreferentialSeating) && (
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">
                                 <Package className="text-muted-foreground" />
@@ -158,11 +167,11 @@ export function FlightConfirmationDialog({
                                 </p>
                             )}
                         </div>
-                    )} */}
+                    )} 
 
                     {/* --- Total --- */}
                     <p className="text-2xl font-bold mt-6 ">
-                        {/* Total: <span className="text-green-900">${totalPrice.toFixed(2)} USD</span> */}
+                        Total: <span className="text-green-900">${flight?.price.toFixed(2)} USD</span>
                     </p>
                 </article>
 
