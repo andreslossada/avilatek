@@ -3,22 +3,53 @@ import Image from "next/image";
 import { useState } from 'react';
 import { FlightSearchForm } from '../components/flights/FlightSearchForm';
 import { Flight } from '@/types/flight';
-import { FlightCard } from '../components/flights/FlightCard';
 import { FlightDetailsSheet } from '@/components/flights/FlightDetailsSheet';
-import { useFlights } from '../hooks/useFlights';
-import { CardSkeleton } from '@/components/flights/CardSkeleton';
-import { NUMBER_SKELETONS } from '@/lib/constants';
 
+export interface TravelerDetail {
+    id: string;
+    fullName: string;
+    documentType: string;
+    documentNumber: string;
+    dateOfBirth?: Date;
+}
+export interface BookingDetails {
+    flight?: Flight;
+    numberOfTravelers: number;
+    travelerDetails: TravelerDetail[];
+    hasPets: boolean;
+    numberOfPets?: number;
+    hasExtraBags: boolean;
+    numberOfExtraBags?: number;
+    hasInsurance: boolean;
+    hasPreferentialSeating: boolean;
+    hasSpecialNeeds: boolean;
+    specialAssistanceDescription: string;
+}
+
+const initialBookingState: BookingDetails = {
+    flight: undefined,
+    numberOfTravelers: 1,
+    travelerDetails: [],
+    hasPets: false,
+    numberOfPets: undefined,
+    hasExtraBags: false,
+    numberOfExtraBags: undefined,
+    hasInsurance: false,
+    hasPreferentialSeating: false,
+    hasSpecialNeeds: false,
+    specialAssistanceDescription: '',
+};
 export default function Home() {
-    const { isLoading, error } = useFlights();
-    const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
-    const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-
-
+    const [bookingDetails, setBookingDetails] = useState<BookingDetails>(initialBookingState);
 
     const handleFlightSelect = (flight: Flight) => {
-        setSelectedFlight(flight);
-        setIsSheetOpen(true);
+        setBookingDetails(prev => ({ ...prev, flight: flight }));
+    };
+
+    const handleCloseSheet = (isOpen: boolean) => {
+        if (!isOpen) {
+            setBookingDetails(initialBookingState); // Reinicia el estado al cerrar
+        }
     };
 
 
@@ -48,9 +79,10 @@ export default function Home() {
                 </div> */}
             </div>
             <FlightDetailsSheet
-                isOpen={isSheetOpen}
-                onOpenChange={setIsSheetOpen}
-                flight={selectedFlight}
+                isOpen={!!bookingDetails.flight}
+                onOpenChange={handleCloseSheet}
+                bookingDetails={bookingDetails} // ✨ Pasa el objeto completo
+                setBookingDetails={setBookingDetails} // ✨ Pasa el setter para que el hijo lo use
             />
         </section>
     );

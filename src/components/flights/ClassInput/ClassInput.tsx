@@ -1,7 +1,6 @@
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
@@ -22,7 +21,9 @@ export function ClassInput({ value, onChange }: ClassInputProps) {
                 <Sofa className="size-5" />
                 <SelectValue
                     // placeholder={flightClass.charAt(0).toUpperCase() + flightClass.slice(1)}
+                    placeholder="Select Class"
                 />
+
             </SelectTrigger>
             <SelectContent>
                 {Object.entries(FLIGHT_CLASS_LABELS).map(([value, label]) => (

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { faker } from '@faker-js/faker';
 import { Input } from '@/components/ui/input';
 import {
@@ -16,8 +15,9 @@ import { Label } from '@/components/ui/label';
 import { DOCUMENT_TYPES } from '@/lib/constants';
 import { FLIGHT_CLASS_LABELS } from "../flights/ClassInput/types";
 import { Flight } from "@/types/flight";
-import { BookingDetails, TravelerDetail } from "../flights/FlightDetailsSheet";
+import { TravelerDetail } from "../flights/FlightDetailsSheet";
 import { Button } from "../ui/button";
+import { BookingDetails } from "@/app/page";
 
 interface PassengersInputProps {
     flight?: Flight;
@@ -38,6 +38,7 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
         hasPreferentialSeating,
         hasSpecialNeeds,
         specialAssistanceDescription,
+        flight
     } = bookingDetails;
 
     const handleTravelerDetailChange = (
@@ -142,7 +143,7 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
             <div className="flex justify-between items-center ">
                 <p className="flex gap-2 text-base font-medium text-muted-foreground ">
                     <Sofa />
-                    {/* {flight && FLIGHT_CLASS_LABELS[flight.class_type]} */}
+                    {flight && FLIGHT_CLASS_LABELS[flight.class_type]}
                 </p>
                 <PassengerCounter numberOfPassengers={numberOfTravelers} onCountChange={handlePassengerCountChange} />
             </div>
@@ -242,17 +243,31 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                             Pets
                         </Label>
                     </div>
-                    <Switch id="has-pets"
-                        checked={hasPets}
-                    //   onCheckedChange={setHasPets} 
+                    <Switch
+                        id="has-pets"
+                        checked={bookingDetails.hasPets}
+                        onCheckedChange={(value) =>
+                            setBookingDetails(prev => ({
+                                ...prev,
+                                hasPets: value,
+                            }))
+                        }
                     />
                     {hasPets && (
                         <Input
                             id="num-pets"
                             type="number"
                             min="0"
+                            max="3"
                             value={numberOfPets ?? 0}
-                            // onChange={(e) => setNumberOfPets(Number(e.target.value))}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value, 10);
+                                const newNumberOfPets = Math.min(value, 3);
+                                setBookingDetails(prev => ({
+                                    ...prev,
+                                    numberOfPets: newNumberOfPets,
+                                }));
+                            }}
                             className="w-16 ml-auto"
                         />
                     )}
@@ -267,8 +282,13 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     </div>
                     <Switch
                         id="has-extra-bags"
-                        checked={hasExtraBags}
-                        // onCheckedChange={setHasExtraBags}
+                        checked={bookingDetails.hasExtraBags}
+                        onCheckedChange={(value) =>
+                            setBookingDetails(prev => ({
+                                ...prev,
+                                hasExtraBags: value,
+                            }))
+                        }
                     />
                     {hasExtraBags && (
                         <Input
@@ -276,7 +296,14 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                             type="number"
                             min="0"
                             value={numberOfExtraBags ?? 0}
-                            // onChange={(e) => setNumberOfExtraBags(Number(e.target.value))}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value, 10);
+                                const newNumber = Math.min(value, 3);
+                                setBookingDetails(prev => ({
+                                    ...prev,
+                                    numberOfExtraBags: newNumber,
+                                }));
+                            }}
                             className="w-16 ml-auto"
                         />
                     )}
@@ -291,7 +318,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     <Switch
                         id="has-extra-bags"
                         checked={hasInsurance}
-                        // onCheckedChange={setHasInsurance}
+                        onCheckedChange={(value) =>
+                            setBookingDetails(prev => ({
+                                ...prev,
+                                hasInsurance: value,
+                            }))
+                        }
                     />
                 </div>
                 <div className="flex items-center justify-start space-x-3  h-6 ">
@@ -304,7 +336,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     <Switch
                         id="has-extra-bags"
                         checked={hasPreferentialSeating}
-                        // onCheckedChange={setHasPreferentialSeating}
+                        onCheckedChange={(value) =>
+                            setBookingDetails(prev => ({
+                                ...prev,
+                                hasPreferentialSeating: value,
+                            }))
+                        }
                     />
                 </div>
                 <div className="flex items-center justify-start space-x-3  h-6 ">
@@ -317,7 +354,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                     <Switch
                         id="has-needs"
                         checked={hasSpecialNeeds}
-                        // onCheckedChange={setHasSpecialNeeds}
+                        onCheckedChange={(value) =>
+                            setBookingDetails(prev => ({
+                                ...prev,
+                                hasSpecialNeeds: value,
+                            }))
+                        }
                     />
                 </div>
                 {hasSpecialNeeds && (
@@ -325,7 +367,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                         id="desc-needs"
                         type="text"
                         value={specialAssistanceDescription || ''}
-                        // onChange={(e) => setSpecialAssistanceDescription(e.target.value)}
+                        onChange={(e) => {
+                            setBookingDetails(prev => ({
+                                ...prev,
+                                specialAssistanceDescription: e.target.value,
+                            }));
+                        }}
                         placeholder="Describe your needs"
                         className="w-full"
                         maxLength={200}

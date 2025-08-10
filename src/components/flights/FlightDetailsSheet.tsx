@@ -12,9 +12,9 @@ import { Button } from '../ui/button';
 import { DateInput } from './DateInput';
 import { PassengersInput } from '../passengers/PassengersInput';
 import { ScrollArea } from '../ui/scroll-area';
-import { CornerUpLeft, CornerUpRight, Plane } from 'lucide-react';
-import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
-import { FlightDetailsSheetProps } from "@/types/flight";
+import { CornerUpRight, Plane } from 'lucide-react';
+import { BookingDetails } from "@/app/page";
+// import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 
 
 export interface TravelerDetail {
@@ -25,36 +25,17 @@ export interface TravelerDetail {
     dateOfBirth?: Date;
 }
 
-export interface BookingDetails {
-    numberOfTravelers: number;
-    travelerDetails: TravelerDetail[];
-    hasPets: boolean;
-    numberOfPets?: number;
-    hasExtraBags: boolean;
-    numberOfExtraBags?: number;
-    hasInsurance: boolean;
-    hasPreferentialSeating: boolean;
-    hasSpecialNeeds: boolean;
-    specialAssistanceDescription: string;
+interface FlightDetailsSheetProps {
+    isOpen: boolean;
+    onOpenChange: (isOpen: boolean) => void;
+    bookingDetails: BookingDetails;
+    setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
 }
 
-const initialBookingState: BookingDetails = {
-    numberOfTravelers: 1,
-    travelerDetails: [],
-    hasPets: false,
-    numberOfPets: undefined,
-    hasExtraBags: false,
-    numberOfExtraBags: undefined,
-    hasInsurance: false,
-    hasPreferentialSeating: false,
-    hasSpecialNeeds: false,
-    specialAssistanceDescription: '',
-};
-export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetailsSheetProps) {
-    const [bookingDetails, setBookingDetails] = useState<BookingDetails>(initialBookingState);
+export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBookingDetails }: FlightDetailsSheetProps) {
 
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
-
+    const flight = bookingDetails.flight;
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
     const disableDepartureDates = (date: Date) => {
         //Disable past dates
@@ -82,11 +63,11 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
     const handleSelectFlight = () => {
         setIsAlertDialogOpen(true);
     };
-    const handleConfirmBooking = () => {
-        alert(`Flight booking to ${flight?.destination_airport} confirmed!`);
-        setIsAlertDialogOpen(false);
-        onOpenChange(false);
-    };
+    // const handleConfirmBooking = () => {
+    //     alert(`Flight booking to ${flight?.destination_airport} confirmed!`);
+    //     setIsAlertDialogOpen(false);
+    //     onOpenChange(false);
+    // };
 
     // if (bookingDetails.hasPets && bookingDetails.numberOfPets > 0) {
     //     totalPrice += (bookingDetails.numberOfPets ?? 0) * COST_PER_PET;
@@ -132,6 +113,26 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
         //if all validations passed
         return true;
     };
+
+    const handleFlightDateChange = (date?: Date) => {
+        setBookingDetails(prevDetails => {
+            // ✨ Solo actualiza el vuelo si existe
+            if (!prevDetails.flight) {
+                // Si el vuelo no existe, no hagas nada o muestra un error
+                return prevDetails;
+            }
+
+            const updatedFlight = {
+                ...prevDetails.flight,
+                departureDate: date,
+            };
+
+            return {
+                ...prevDetails,
+                flight: updatedFlight,
+            };
+        });
+    };
     return (
         <>
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -150,12 +151,13 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                                 </h4>
                                 <div className="flex gap-2  items-center">
                                         <CornerUpRight />
-                                    {/* <DateInput
-                                        // selectedDate={departureDate}
-                                        // onDateSelect={setDepartureDate}
-                                            placeholderText="Departure"
-                                            disabledPredicate={disableDepartureDates}
-                                        /> */}
+                                    <DateInput
+                                        selectedDate={bookingDetails.flight?.departure_at}
+                                        onDateSelect={handleFlightDateChange}
+                                        placeholderText="Departure"
+                                        disabledPredicate={disableDepartureDates}
+                                        isDisabled={true}
+                                    />
 
 
                                 </div>
@@ -185,12 +187,12 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, flight }: FlightDetai
                     </SheetFooter>
                 </SheetContent>
             </Sheet>
-            <FlightConfirmationDialog
+            {/* <FlightConfirmationDialog
                 isOpen={isAlertDialogOpen}
                 onOpenChange={setIsAlertDialogOpen}
                 // flight={flight}
-                onConfirm={handleConfirmBooking}
-            />
+                // onConfirm={handleConfirmBooking}
+            /> */}
         </>
     );
 }

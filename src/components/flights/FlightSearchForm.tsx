@@ -14,15 +14,14 @@ import { PassengerCounter } from '../passengers/PassengerCounter';
 import { useFlights } from '@/hooks/useFlights';
 import type { CitySelectEvent } from '@/types/ui';
 import type { Flight } from '@/types/flight';
-import { FlightClassOptions } from "./ClassInput/types";
+import { FLIGHT_CLASS_LABELS, FlightClassOptions } from "./ClassInput/types";
 import { FlightCard } from "./FlightCard";
 
 interface FlightSearchData {
     departureCity: string;
     destinationCity: string;
     departureDate?: Date | null;
-    returnDate?: Date | null;
-    flightClass: 'economy' | 'business' | 'first-class' | 'any-class';
+    flightClass: FlightClassOptions;
     numberOfTravelers: number;
 }
 
@@ -43,7 +42,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
         departureCity: '',
         destinationCity: '',
         departureDate: null,
-        flightClass: 'economy',
+        flightClass: 'any_class',
         numberOfTravelers: 1,
     });
 
@@ -78,7 +77,6 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
             ...prev,
             departureDate: date ?? null,
             // Auto-ajuste: si la fecha de regreso es anterior a la de salida, la limpiamos
-            returnDate: prev.returnDate && date && prev.returnDate < date ? null : prev.returnDate
         }));
     };
 
@@ -230,20 +228,11 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
         if (disablePastDates(date)) return true;
 
         // No permite fechas después del regreso (si está seleccionado)
-        if (searchData.returnDate && date > searchData.returnDate) return true;
 
         return false;
     };
 
-    const disableReturnDates = (date: Date) => {
-        // No permite fechas pasadas
-        if (disablePastDates(date)) return true;
 
-        // No permite fechas antes de la salida (si está seleccionada)
-        if (searchData.departureDate && date < searchData.departureDate) return true;
-
-        return false;
-    };
 
     // 🧮 Estado derivado para validaciones
     const isFormValid = searchData.departureCity &&
@@ -260,7 +249,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
                 <CardContent className="px-6 py-4">
                     <form
                         onSubmit={handleSubmit}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end"
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end"
                     >
                         {/* 🛫 Ciudad de Salida */}
                         <div className="space-y-2 relative">
@@ -299,16 +288,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
                             />
                         </div>
 
-                        {/* 📅 Fecha de Regreso (Opcional) */}
-                        <div className="space-y-2">
-                            <Label>Return</Label>
-                            <DateInput
-                                selectedDate={searchData.returnDate ?? undefined}
-                                onDateSelect={handleReturnDateSelect}
-                                placeholderText="When? (optional)"
-                                disabledPredicate={disableReturnDates}
-                            />
-                        </div>
+
 
                         {/* 👥 Pasajeros y Clase */}
                         <div className="space-y-2">
@@ -324,7 +304,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
                                     >
                                         <Users className="h-4 w-4" />
                                         {searchData.numberOfTravelers} passenger{searchData.numberOfTravelers !== 1 ? 's' : ''}, {' '}
-                                        {searchData.flightClass.charAt(0).toUpperCase() + searchData.flightClass.slice(1)}
+                                        {FLIGHT_CLASS_LABELS[searchData.flightClass]}
                                     </div>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto py-4 px-4 grid gap-2" align="start">
@@ -365,7 +345,7 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
                                 type='submit'
                                 variant='link'
                                 size='default'
-                                className=" absolute right-0 top-12 p-0 m-0 leading-0 text-xs h-auto"
+                                className=" absolute right-0 top-12 p-0 m-0 leading-0 text-xs h-auto cursor-pointer"
                                 onClick={showAllFlights}
                             >
                                 All Flights

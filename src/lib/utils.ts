@@ -1,18 +1,28 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { format } from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export const formatDate = (date: Date | undefined) => {
-    if (!date) return 'Select date';
-    return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-    });
-};
+export function formatDate(date: string | Date | undefined): string | undefined {
+    if (!date) {
+        return undefined;
+    }
+
+    // ✨ Verificamos si la variable ya es un objeto Date
+    const dateObject = typeof date === 'string' ? new Date(date) : date;
+
+    // ✨ Comprobamos si la conversión a Date fue exitosa
+    if (isNaN(dateObject.getTime())) {
+        console.error('Invalid date provided to formatDate:', date);
+        return 'Invalid Date';
+    }
+
+    // `dd MMM yyyy` format (e.g., 09 Aug 2025)
+    return format(dateObject, 'dd MMM yyyy');
+}
 
 export const stringToDate = (dateString: string): Date | undefined => {
     const date = new Date(dateString);
