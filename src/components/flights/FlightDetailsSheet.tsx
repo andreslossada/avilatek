@@ -13,8 +13,8 @@ import { DateInput } from './DateInput';
 import { PassengersInput } from '../passengers/PassengersInput';
 import { ScrollArea } from '../ui/scroll-area';
 import { CornerUpRight, Plane } from 'lucide-react';
-import { BookingDetails, initialBookingState } from "@/app/page";
 import SuccessAnimation from "../ui/SuccessAnimation";
+import { BookingDetails, initialBookingState } from "@/types/booking";
 // import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 
 
