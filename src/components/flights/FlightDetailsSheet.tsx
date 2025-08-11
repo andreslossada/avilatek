@@ -28,7 +28,6 @@ export interface TravelerDetail {
 
 interface FlightDetailsSheetProps {
     isOpen: boolean;
-    // onOpenChange: (isOpen: boolean) => void;
     bookingDetails: BookingDetails;
     setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
 }
@@ -185,7 +184,6 @@ export function FlightDetailsSheet({ isOpen, bookingDetails, setBookingDetails }
                 onOpenChange={setIsAlertDialogOpen}
                 bookingDetails={bookingDetails}
                 onConfirm={handleConfirmBooking}
-                // isConfirmed={isConfirmed} 
             />
             {isConfirmed && (
                 <SuccessAnimation />
