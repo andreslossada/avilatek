@@ -197,8 +197,8 @@ export function FlightSearchForm({ onFlightSelect }: FlightSearchFormProps) {
             if (allFlights) {
                 const normalizedFlights = allFlights.map(flight => ({
                     ...flight,
-                    departure_at: flight.departure_at ? new Date(flight.departure_at) : undefined,
-                    arrival_at: flight.arrival_at ? new Date(flight.arrival_at) : undefined,
+                    departure_at: new Date(flight.departure_at),
+                    arrival_at: new Date(flight.arrival_at),
                 }));
                 setSearchResults({
                     flights: normalizedFlights,

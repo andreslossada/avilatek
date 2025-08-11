@@ -1,7 +1,6 @@
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Minus, Plus, User } from 'lucide-react';
-import { BookingDetails } from "../flights/FlightDetailsSheet";
 
 
 interface PassengerCounterProps {
