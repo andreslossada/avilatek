@@ -85,6 +85,7 @@ export function FlightDetailsSheet({ isOpen, bookingDetails, setBookingDetails }
     const handleConfirmBooking = (isOpen: boolean) => {
         setIsAlertDialogOpen(false)
         setTimeout(() => {
+            handleCloseSheet(false)
             if (!isOpen) {
                 setBookingDetails(initialBookingState); // Reinicia el estado al cerrar
             }

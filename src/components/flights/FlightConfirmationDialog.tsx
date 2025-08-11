@@ -55,7 +55,7 @@ export function FlightConfirmationDialog({
     //     totalPrice += numberOfExtraBags * COST_PER_EXTRA_BAG;
     // }
     return (
-        <AlertDialog open={isOpen} onOpenChange={onConfirm}>
+        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirm Flight Booking</AlertDialogTitle>
