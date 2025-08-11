@@ -25,7 +25,6 @@ export interface FlightConfirmationDialogProps {
     onOpenChange: (open: boolean) => void;
     bookingDetails: BookingDetails,
     onConfirm: (isOpen: boolean) => void;
-    // isConfirmed: boolean;
 }
 
 export function FlightConfirmationDialog({
@@ -33,7 +32,6 @@ export function FlightConfirmationDialog({
     onOpenChange,
     bookingDetails,
     onConfirm,
-    // isConfirmed
 }: FlightConfirmationDialogProps) {
     const { flight,
         numberOfTravelers,
@@ -187,7 +185,7 @@ export function FlightConfirmationDialog({
                         <Button variant="outline">Cancel</Button>
                     </AlertDialogCancel>
                     <AlertDialogAction asChild>
-                        <Button onClick={onConfirm}>Confirm</Button>
+                        <Button onClick={() => onConfirm(true)}>Confirm</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
 
