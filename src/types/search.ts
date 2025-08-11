@@ -1,10 +1,10 @@
 export interface FlightSearchParams {
-  departureCity: string;
-  destinationCity: string;
-  departureDate: string;
-  returnDate?: string;
-  passengers: number;
-  class: 'economy' | 'business' | 'first';
+    departureCity: string;
+    destinationCity: string;
+    departureDate: Date;
+    returnDate?: Date;
+    passengers: number;
+    class: 'economy' | 'business' | 'first';
 }
 
 export interface SearchFilters {

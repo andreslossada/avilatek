@@ -17,7 +17,6 @@ import { ScrollArea } from '../ui/scroll-area';
 import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { Check, Package, Plane, Users } from 'lucide-react';
 import { calculateAge } from "@/lib/utils";
-import { BookingDetails } from "@/app/page";
 import { useState } from "react";
 
 export interface FlightConfirmationDialogProps {
