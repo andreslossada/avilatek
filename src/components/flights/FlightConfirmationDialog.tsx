@@ -18,6 +18,7 @@ import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { Check, Package, Plane, Users } from 'lucide-react';
 import { calculateAge } from "@/lib/utils";
 import { useState } from "react";
+import { BookingDetails } from "@/types/booking";
 
 export interface FlightConfirmationDialogProps {
     isOpen: boolean;

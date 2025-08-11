@@ -51,7 +51,7 @@ export function calculateAge(birthDate: Date | undefined): number | null   {
     return age;
   }
 
-  export function calculateFlightDuration(departure: string, arrival: string) {
+  export function calculateFlightDuration(departure: Date, arrival: Date) {
       const departureDate = new Date(departure);
       const arrivalDate = new Date(arrival);
 
