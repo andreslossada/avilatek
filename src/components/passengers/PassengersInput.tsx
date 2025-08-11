@@ -17,7 +17,7 @@ import { FLIGHT_CLASS_LABELS } from "../flights/ClassInput/types";
 import { Flight } from "@/types/flight";
 import { TravelerDetail } from "../flights/FlightDetailsSheet";
 import { Button } from "../ui/button";
-import { BookingDetails } from "@/app/page";
+import { BookingDetails } from "@/types/booking";
 
 interface PassengersInputProps {
     flight?: Flight;
