@@ -8,6 +8,7 @@ const SuccessAnimation = () => {
     const style = {
         height: 150,
         width: 150,
+        position: 'fixed',
     };
 
     return (
