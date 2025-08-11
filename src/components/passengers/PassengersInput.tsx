@@ -48,7 +48,6 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
     ) => {
 
         // Create a copy of the travelerDetails array to avoid direct state mutation
-
         const updatedDetails = [...travelerDetails];
 
         // Ensure the traveler detail exists at the index, if not, create a new one
@@ -311,12 +310,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                 <div className="flex items-center justify-start space-x-3  h-6 ">
                     <div className="flex items-center gap-2">
                         <Shield className="h-5 w-5 text-muted-foreground" />
-                        <Label htmlFor="has-extra-bags" className="text-base cursor-pointer">
+                        <Label htmlFor="has-insurance" className="text-base cursor-pointer">
                             Insurance
                         </Label>
                     </div>
                     <Switch
-                        id="has-extra-bags"
+                        id="has-insurance"
                         checked={hasInsurance}
                         onCheckedChange={(value) =>
                             setBookingDetails(prev => ({
@@ -329,12 +328,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                 <div className="flex items-center justify-start space-x-3  h-6 ">
                     <div className="flex items-center gap-2">
                         <Crown className="h-5 w-5 text-muted-foreground" />
-                        <Label htmlFor="has-extra-bags" className="text-base cursor-pointer">
+                        <Label htmlFor="pref-seating" className="text-base cursor-pointer">
                             Preferential Seating
                         </Label>
                     </div>
                     <Switch
-                        id="has-extra-bags"
+                        id="pref-seating"
                         checked={hasPreferentialSeating}
                         onCheckedChange={(value) =>
                             setBookingDetails(prev => ({
@@ -347,12 +346,12 @@ export function PassengersInput({ bookingDetails, setBookingDetails }: Passenger
                 <div className="flex items-center justify-start space-x-3  h-6 ">
                     <div className="flex items-center gap-2">
                         <Hospital className="h-5 w-5 text-muted-foreground" />
-                        <Label htmlFor="has-extra-bags" className="text-base cursor-pointer">
+                        <Label htmlFor="specia-needs" className="text-base cursor-pointer">
                             Special Assistance
                         </Label>
                     </div>
                     <Switch
-                        id="has-needs"
+                        id="specia-needs"
                         checked={hasSpecialNeeds}
                         onCheckedChange={(value) =>
                             setBookingDetails(prev => ({

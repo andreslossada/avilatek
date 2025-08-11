@@ -1,4 +1,7 @@
 import React from 'react';
+import SuccessAnimation from '../ui/SuccessAnimation'
+import lottieJson from '../animations/success.json'
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,12 +18,14 @@ import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 import { Check, Package, Plane, Users } from 'lucide-react';
 import { calculateAge } from "@/lib/utils";
 import { BookingDetails } from "@/app/page";
+import { useState } from "react";
 
 export interface FlightConfirmationDialogProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     bookingDetails: BookingDetails,
-    onConfirm: () => void;
+    onConfirm: (isOpen: boolean) => void;
+    // isConfirmed: boolean;
 }
 
 export function FlightConfirmationDialog({
@@ -28,6 +33,7 @@ export function FlightConfirmationDialog({
     onOpenChange,
     bookingDetails,
     onConfirm,
+    // isConfirmed
 }: FlightConfirmationDialogProps) {
     const { flight,
         numberOfTravelers,
@@ -40,6 +46,7 @@ export function FlightConfirmationDialog({
         hasPreferentialSeating,
         hasSpecialNeeds,
         specialAssistanceDescription, } = bookingDetails
+
     // let totalPrice = flight ? flight.priceUSD * numberOfTravelers : 0;
 
     // if (hasPets && numberOfPets > 0) {
@@ -50,7 +57,7 @@ export function FlightConfirmationDialog({
     //     totalPrice += numberOfExtraBags * COST_PER_EXTRA_BAG;
     // }
     return (
-        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+        <AlertDialog open={isOpen} onOpenChange={onConfirm}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirm Flight Booking</AlertDialogTitle>
@@ -183,6 +190,8 @@ export function FlightConfirmationDialog({
                         <Button onClick={onConfirm}>Confirm</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
+
+
             </AlertDialogContent>
         </AlertDialog>
     );

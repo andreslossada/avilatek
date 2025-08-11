@@ -13,7 +13,8 @@ import { DateInput } from './DateInput';
 import { PassengersInput } from '../passengers/PassengersInput';
 import { ScrollArea } from '../ui/scroll-area';
 import { CornerUpRight, Plane } from 'lucide-react';
-import { BookingDetails } from "@/app/page";
+import { BookingDetails, initialBookingState } from "@/app/page";
+import SuccessAnimation from "../ui/SuccessAnimation";
 // import { COST_PER_EXTRA_BAG, COST_PER_PET } from '@/lib/constants';
 
 
@@ -27,14 +28,13 @@ export interface TravelerDetail {
 
 interface FlightDetailsSheetProps {
     isOpen: boolean;
-    onOpenChange: (isOpen: boolean) => void;
+    // onOpenChange: (isOpen: boolean) => void;
     bookingDetails: BookingDetails;
     setBookingDetails: React.Dispatch<React.SetStateAction<BookingDetails>>;
-    onConfirmBooking: () => void;
 }
 
-export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBookingDetails, onConfirmBooking }: FlightDetailsSheetProps) {
-
+export function FlightDetailsSheet({ isOpen, bookingDetails, setBookingDetails }: FlightDetailsSheetProps) {
+    const [isConfirmed, setIsConfirmed] = useState(false);
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
     const flight = bookingDetails.flight;
     const disablePastDates = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
@@ -43,47 +43,14 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBo
         if (disablePastDates(date)) {
             return true;
         }
-        //If returnDate is selected, disable any departure date after returnDate
-        // if (returnDate && date > returnDate) {
-        //     return true;
-        // }
         return false;
     };
-    // const disableReturnDates = (date: Date) => {
-    //     //Disable past dates
-    //     if (disablePastDates(date)) {
-    //         return true;
-    //     }
-    //     //If departureDate is selected, disable any return dates prior to departureDate
-    //     if (departureDate && date < departureDate) {
-    //         return true;
-    //     }
-    //     return false;
-    // };
 
     const handleSelectFlight = () => {
         setIsAlertDialogOpen(true);
     };
-    // const handleConfirmBooking = () => {
-    //     alert(`Flight booking to ${flight?.destination_airport} confirmed!`);
-    //     setIsAlertDialogOpen(false);
-    //     onOpenChange(false);
-    // };
-
-    // if (bookingDetails.hasPets && bookingDetails.numberOfPets > 0) {
-    //     totalPrice += (bookingDetails.numberOfPets ?? 0) * COST_PER_PET;
-    // }
-
-    // if (bookingDetails.hasExtraBags && bookingDetails.numberOfExtraBags > 0) {
-    //     totalPrice += (bookingDetails.numberOfExtraBags ?? 0) * COST_PER_EXTRA_BAG;
-    // }
 
     const areAllEssentialFieldsFilled = () => {
-        //Validate departure and return dates
-        // if (!departureDate || !returnDate) {
-        //     return false;
-        // }
-
         //Validate the travelerDetails array has the same number of items as numberOfTravelers
         if (bookingDetails.travelerDetails.length !== bookingDetails.numberOfTravelers) {
             return false;
@@ -115,6 +82,31 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBo
         return true;
     };
 
+
+    const handleConfirmBooking = (isOpen: boolean) => {
+        setIsAlertDialogOpen(false)
+        setTimeout(() => {
+            if (!isOpen) {
+                setBookingDetails(initialBookingState); // Reinicia el estado al cerrar
+            }
+        }, 100)
+        setTimeout(() => {
+            setIsConfirmed(true);
+        }, 300)
+        setTimeout(() => {
+            setIsConfirmed(false)
+
+        }, 2500)
+
+    };
+
+    const handleCloseSheet = (isOpen: boolean) => {
+        if (!isOpen) {
+            setBookingDetails(initialBookingState); // Reinicia el estado al cerrar
+        }
+    };
+
+
     const handleFlightDateChange = (date?: Date) => {
         setBookingDetails(prevDetails => {
             // ✨ Solo actualiza el vuelo si existe
@@ -136,7 +128,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBo
     };
     return (
         <>
-            <Sheet open={isOpen} onOpenChange={onOpenChange}>
+            <Sheet open={isOpen} onOpenChange={handleCloseSheet}>
                 <SheetContent side="right" className="px-4 bg-gray-100 ">
                     <SheetHeader className="px-0 pb-0">
                         <SheetTitle>Flight Details</SheetTitle>
@@ -183,7 +175,7 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBo
                             Continue
                         </Button>
                         <SheetClose asChild>
-                            <Button variant="outline">Close</Button>
+                            <Button variant="outline" className="cursor-pointer">Close</Button>
                         </SheetClose>
                     </SheetFooter>
                 </SheetContent>
@@ -192,8 +184,12 @@ export function FlightDetailsSheet({ isOpen, onOpenChange, bookingDetails, setBo
                 isOpen={isAlertDialogOpen}
                 onOpenChange={setIsAlertDialogOpen}
                 bookingDetails={bookingDetails}
-                onConfirm={onConfirmBooking}
+                onConfirm={handleConfirmBooking}
+                // isConfirmed={isConfirmed} 
             />
+            {isConfirmed && (
+                <SuccessAnimation />
+            )}
         </>
     );
 }
